@@ -1,0 +1,495 @@
+{
+  "name": "Asha Jyothi Diagnostics - Complete Automation Hub",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "appointments",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "webhook-appointments-01",
+      "name": "Webhook: Appointments & Home Collection",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        180,
+        320
+      ],
+      "webhookId": "ashajyothi-appointments-webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "reports",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "webhook-reports-02",
+      "name": "Webhook: Report Published",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        180,
+        640
+      ],
+      "webhookId": "ashajyothi-reports-webhook"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "enquiries",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {}
+      },
+      "id": "webhook-enquiries-03",
+      "name": "Webhook: General Enquiries",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        180,
+        920
+      ],
+      "webhookId": "ashajyothi-enquiries-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "const apt = $input.first().json.body.appointment;\n\nreturn {\n  bookingId: apt.id,\n  patientName: apt.patientName,\n  phone: apt.phone,\n  email: apt.email || 'N/A',\n  service: apt.service,\n  bookingType: apt.bookingType === 'home_collection' ? 'Home Sample Collection' : 'Clinic Walk-in',\n  scheduledDate: apt.preferredDate,\n  scheduledTime: apt.preferredTime,\n  address: apt.address || 'N/A',\n  landmark: apt.landmark || 'N/A',\n  googleMapsUrl: apt.googleMapsNavigationUrl || 'N/A',\n  fastingInstructions: apt.fastingGuidelines || 'Standard hydration',\n  referringDoctor: apt.referringDoctor || 'Self / Walk-in',\n  status: apt.status || 'New Request',\n  createdAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })\n};"
+      },
+      "id": "format-booking-data",
+      "name": "Format Booking Record",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AshaJyothiGoogleSheetId",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Appointments",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "sheets-append-appointment",
+      "name": "Google Sheets: Append Booking",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        680,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false
+          },
+          "conditions": [
+            {
+              "id": "condition-is-home-collection",
+              "leftValue": "={{ $json.bookingType }}",
+              "rightValue": "Home Sample Collection",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-home-collection",
+      "name": "Is Home Collection?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        680,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/v1/messages",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"917386320634\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🚨 *NEW HOME BLOOD COLLECTION DISPATCH* 🚨\\n\\n👤 *Patient:* {{ $json.patientName }}\\n📞 *Phone:* {{ $json.phone }}\\n🧪 *Package/Test:* {{ $json.service }}\\n⏰ *Fasting Slot:* {{ $json.scheduledDate }} ({{ $json.scheduledTime }})\\n📍 *Address:* {{ $json.address }}\\n🏛️ *Landmark:* {{ $json.landmark }}\\n\\n🗺️ *1-Click Google Maps Navigation:*\\n{{ $json.googleMapsUrl }}\\n\\n_Asha Jyothi Diagnostics - Phlebotomy Dispatch_\"\n  }\n}",
+        "options": {}
+      },
+      "id": "whatsapp-phlebotomist-dispatch",
+      "name": "WhatsApp: Phlebotomist Dispatch Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        340
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/v1/messages",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.phone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🏥 *Asha Jyothi Diagnostic Centre, Toopran*\\n\\nDear {{ $json.patientName }},\\nYour appointment request for *{{ $json.service }}* is registered.\\n\\n📅 *Date:* {{ $json.scheduledDate }}\\n⏰ *Slot:* {{ $json.scheduledTime }}\\n🔖 *Ref ID:* {{ $json.bookingId }}\\n\\n⚠️ *Preparation Guidelines:*\\n{{ $json.fastingInstructions }}\\n\\n📍 *Location:* 13-21/1/A, Keshava Nagar Colony, Toopran.\\n📞 *Contact:* +91 73863 20634\"\n  }\n}",
+        "options": {}
+      },
+      "id": "whatsapp-patient-confirmation",
+      "name": "WhatsApp: Patient Confirmation & Fasting Rules",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "primary",
+          "mode": "list"
+        },
+        "start": "={{ $json.scheduledDate }}T08:00:00+05:30",
+        "end": "={{ $json.scheduledDate }}T08:30:00+05:30",
+        "additionalFields": {
+          "summary": "={{ $json.bookingType }}: {{ $json.service }} - {{ $json.patientName }}",
+          "description": "=Patient Phone: {{ $json.phone }}\nDoctor Ref: {{ $json.referringDoctor }}\nFasting Instructions: {{ $json.fastingInstructions }}\nAddress: {{ $json.address }}"
+        }
+      },
+      "id": "gcal-radiologist-slot",
+      "name": "Google Calendar: Schedule Slot",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.2,
+      "position": [
+        1200,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rpt = $input.first().json.body.report;\nlet p = String(rpt.phone || '').replace(/[^0-9]/g, '');\nif (p.length === 10) p = '91' + p;\n\nreturn {\n  reportId: rpt.id,\n  reportCode: rpt.reportCode,\n  patientName: rpt.patientName,\n  phone: p,\n  testName: rpt.testName,\n  doctorName: rpt.doctorName,\n  testDate: rpt.testDate,\n  downloadUrl: rpt.downloadPortalUrl,\n  whatsappText: rpt.whatsappMessageDraft\n};"
+      },
+      "id": "format-report-data",
+      "name": "Format Report Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/v1/messages",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.phone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📄 *DIAGNOSTIC REPORT READY FOR DOWNLOAD*\\n\\nDear {{ $json.patientName }},\\n\\nYour verified test report for *{{ $json.testName }}* conducted on {{ $json.testDate }} has been published by {{ $json.doctorName }}.\\n\\n🔗 *Download Official PDF Report:*\\n{{ $json.downloadUrl }}\\n\\n🔖 *Report Code:* `{{ $json.reportCode }}`\\n\\n_Asha Jyothi Diagnostic Centre, Keshava Nagar Colony, Toopran (Ph: +91 73863 20634)_\"\n  }\n}",
+        "options": {}
+      },
+      "id": "whatsapp-send-report-link",
+      "name": "WhatsApp: Send Verified Report Link",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AshaJyothiGoogleSheetId",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "ReportsLog",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "sheets-log-report-delivery",
+      "name": "Google Sheets: Log Report Delivery",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        940,
+        640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const enq = $input.first().json.body.enquiry;\n\nreturn {\n  enquiryId: enq.id,\n  name: enq.name,\n  phone: enq.phone,\n  email: enq.email || 'N/A',\n  service: enq.service || 'General Enquiry',\n  message: enq.message,\n  createdAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })\n};"
+      },
+      "id": "format-enquiry-data",
+      "name": "Format Enquiry Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        420,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1AshaJyothiGoogleSheetId",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Enquiries",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        },
+        "options": {}
+      },
+      "id": "sheets-append-enquiry",
+      "name": "Google Sheets: Log Enquiry",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        680,
+        920
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/v1/messages",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"917386320634\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📩 *NEW PATIENT ENQUIRY RECEIVED*\\n\\n👤 *Name:* {{ $json.name }}\\n📞 *Phone:* {{ $json.phone }}\\n🧪 *Service Interest:* {{ $json.service }}\\n💬 *Message:*\\n\\\"{{ $json.message }}\\\"\\n\\n_Asha Jyothi Diagnostics Reception Inbox_\"\n  }\n}",
+        "options": {}
+      },
+      "id": "whatsapp-reception-alert",
+      "name": "WhatsApp: Notify Reception of Enquiry",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        940,
+        920
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook: Appointments & Home Collection": {
+      "main": [
+        [
+          {
+            "node": "Format Booking Record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Booking Record": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Append Booking",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Is Home Collection?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Home Collection?": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: Phlebotomist Dispatch Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "WhatsApp: Patient Confirmation & Fasting Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp: Phlebotomist Dispatch Alert": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar: Schedule Slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp: Patient Confirmation & Fasting Rules": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar: Schedule Slot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: Report Published": {
+      "main": [
+        [
+          {
+            "node": "Format Report Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Report Data": {
+      "main": [
+        [
+          {
+            "node": "WhatsApp: Send Verified Report Link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp: Send Verified Report Link": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Log Report Delivery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook: General Enquiries": {
+      "main": [
+        [
+          {
+            "node": "Format Enquiry Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Enquiry Data": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets: Log Enquiry",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "WhatsApp: Notify Reception of Enquiry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
