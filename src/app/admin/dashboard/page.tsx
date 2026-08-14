@@ -113,14 +113,25 @@ export default function AdminDashboard() {
           <p className="text-slate-500 text-xs mt-1">Real-time scheduling metrics and n8n webhook sync statuses.</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <a
             href="/api/admin/export-n8n"
             download="ashajyothi_n8n_master_workflow.json"
             className="flex items-center gap-1.5 px-3 py-2 bg-teal-500 hover:bg-teal-600 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
+            title="Appointments, Home Collections, Report Publishing & Google Sheets workflow"
           >
             <Download className="h-3.5 w-3.5" />
-            <span>Export n8n Blueprint (.json)</span>
+            <span>Export Master Workflow (.json)</span>
+          </a>
+
+          <a
+            href="/api/admin/export-n8n?type=chatbot"
+            download="ashajyothi_n8n_whatsapp_chatbot.json"
+            className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition-all shadow-sm"
+            title="24/7 WhatsApp Interactive Menu & Intent Router Chatbot"
+          >
+            <Download className="h-3.5 w-3.5" />
+            <span>Export WhatsApp Chatbot (.json)</span>
           </a>
 
           <button
