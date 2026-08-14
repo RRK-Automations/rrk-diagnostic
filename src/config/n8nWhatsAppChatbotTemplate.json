@@ -1,5 +1,5 @@
 {
-  "name": "Asha Jyothi Diagnostics - 24/7 WhatsApp Interactive Chatbot",
+  "name": "Asha Jyothi Diagnostics - Unified WhatsApp Conversational Chatbot",
   "nodes": [
     {
       "parameters": {
@@ -8,7 +8,7 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "meta-verify-webhook",
+      "id": "meta-get-verify",
       "name": "Meta Webhook: Verification (GET)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -24,7 +24,7 @@
         "responseBody": "={{ $json.query && $json.query['hub.challenge'] ? $json.query['hub.challenge'] : 'VERIFIED' }}",
         "options": {}
       },
-      "id": "respond-meta-challenge",
+      "id": "meta-verify-response",
       "name": "Respond Challenge to Meta",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1.1,
@@ -40,7 +40,7 @@
         "responseMode": "onReceived",
         "options": {}
       },
-      "id": "meta-messages-webhook",
+      "id": "meta-inbound-post",
       "name": "Meta Webhook: Inbound Messages (POST)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2,
@@ -48,14 +48,14 @@
         180,
         420
       ],
-      "webhookId": "meta-whatsapp-messages"
+      "webhookId": "meta-whatsapp-inbound"
     },
     {
       "parameters": {
-        "jsCode": "const body = $input.first().json.body;\n\n// Safely extract Meta WhatsApp payload structures\nconst entry = body && body.entry && body.entry[0];\nconst change = entry && entry.changes && entry.changes[0];\nconst value = change && change.value;\n\n// If status update (sent/delivered/read receipt), ignore gracefully\nif (!value || !value.messages || value.messages.length === 0) {\n  return [];\n}\n\nconst message = value.messages[0];\nconst contact = value.contacts && value.contacts[0];\n\nconst rawPhone = message.from; // e.g. 917386320634\nconst patientName = (contact && contact.profile && contact.profile.name) || 'Valued Patient';\nconst messageText = message.text ? message.text.body.trim() : '';\nconst lower = messageText.toLowerCase();\n\nlet intent = 'menu';\n\nif (lower === '1' || lower.includes('book') || lower.includes('appointment') || lower.includes('scan') || lower.includes('home') || lower.includes('test')) {\n  intent = 'booking';\n} else if (lower === '2' || lower.includes('report') || lower.includes('result') || lower.includes('download') || lower.includes('pdf')) {\n  intent = 'reports';\n} else if (lower === '3' || lower.includes('package') || lower.includes('pricing') || lower.includes('checkup') || lower.includes('cost') || lower.includes('price')) {\n  intent = 'packages';\n} else if (lower === '4' || lower.includes('location') || lower.includes('timing') || lower.includes('address') || lower.includes('map') || lower.includes('where') || lower.includes('hours')) {\n  intent = 'location';\n} else if (lower === '5' || lower.includes('human') || lower.includes('reception') || lower.includes('talk') || lower.includes('call') || lower.includes('doctor')) {\n  intent = 'human_support';\n} else if (lower === 'hi' || lower === 'hello' || lower === 'hey' || lower === 'menu' || lower === 'start' || lower === 'help' || lower === 'namaste') {\n  intent = 'menu';\n} else {\n  intent = 'general_enquiry';\n}\n\nreturn {\n  patientPhone: rawPhone,\n  patientName: patientName,\n  messageText: messageText,\n  intent: intent,\n  timestamp: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })\n};"
+        "jsCode": "const body = $input.first().json.body;\n\nconst entry = body && body.entry && body.entry[0];\nconst change = entry && entry.changes && entry.changes[0];\nconst value = change && change.value;\n\n// Ignore delivery/read receipts\nif (!value || !value.messages || value.messages.length === 0) {\n  return [];\n}\n\nconst message = value.messages[0];\nconst contact = value.contacts && value.contacts[0];\n\nlet fromPhone = String(message.from || '').replace(/[^0-9]/g, '');\nif (fromPhone.length === 10) fromPhone = '91' + fromPhone;\n\nconst patientName = (contact && contact.profile && contact.profile.name) || 'Valued Patient';\nconst messageText = message.text ? message.text.body.trim() : '';\n\nreturn {\n  phone: fromPhone,\n  name: patientName,\n  message: messageText\n};"
       },
-      "id": "parse-patient-message",
-      "name": "Parse Message & Detect Intent",
+      "id": "parse-meta-inbound",
+      "name": "Extract Patient & Message",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -65,118 +65,27 @@
     },
     {
       "parameters": {
-        "rules": {
-          "values": [
+        "method": "POST",
+        "url": "https://rrk-diagnostic.vercel.app/api/whatsapp-bot",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
             {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.intent }}",
-                    "rightValue": "booking",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.intent }}",
-                    "rightValue": "reports",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.intent }}",
-                    "rightValue": "packages",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.intent }}",
-                    "rightValue": "location",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
-            },
-            {
-              "conditions": {
-                "options": {
-                  "caseSensitive": false,
-                  "leftValue": "",
-                  "typeValidation": "strict"
-                },
-                "conditions": [
-                  {
-                    "leftValue": "={{ $json.intent }}",
-                    "rightValue": "general_enquiry",
-                    "operator": {
-                      "type": "string",
-                      "operation": "equals"
-                    }
-                  }
-                ],
-                "combinator": "and"
-              }
+              "name": "Content-Type",
+              "value": "application/json"
             }
           ]
         },
-        "options": {
-          "fallbackOutput": "extra"
-        }
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"phone\": \"{{ $json.phone }}\",\n  \"name\": \"{{ $json.name }}\",\n  \"message\": \"{{ $json.message }}\"\n}",
+        "options": {}
       },
-      "id": "switch-patient-intent",
-      "name": "Route by Patient Intent",
-      "type": "n8n-nodes-base.switch",
-      "typeVersion": 3.2,
+      "id": "call-bot-engine",
+      "name": "Call Conversational Engine (/api/whatsapp-bot)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         680,
         420
@@ -202,112 +111,89 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.patientPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🏥 *Asha Jyothi Diagnostic Centre, Toopran*\\n\\nHello *{{ $json.patientName }}*! 👋\\nHow can we help you today?\\n\\n1️⃣ *Book Scan / Home Sample Collection*\\n2️⃣ *Download Digital Test Report*\\n3️⃣ *Health Checkup Packages & Pricing*\\n4️⃣ *Clinic Timings & Google Maps Directions*\\n5️⃣ *Speak to Receptionist*\\n\\n_👉 Reply with 1, 2, 3, 4, or 5 to continue._\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.fromPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": {{ JSON.stringify($json.replyText) }}\n  }\n}",
         "options": {}
       },
-      "id": "reply-main-menu",
-      "name": "Reply: Interactive Menu",
+      "id": "send-patient-reply",
+      "name": "WhatsApp: Send Conversational Reply",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        980,
-        140
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v19.0/YOUR_PHONE_NUMBER_ID/messages",
-        "authentication": "none",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.patientPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🩸 *Book a Diagnostic Scan or Home Collection*\\n\\nDear {{ $json.patientName }}, you can select your preferred test slot and home visit online:\\n\\n🔗 *Online Booking Form:*\\nhttps://rrk-diagnostic.vercel.app/book\\n\\n🧪 *Available Scans & Services:*\\n• Ultrasound Scan (USG)\\n• Digital X-Ray\\n• CT Scan\\n• 2D Echo & ECG\\n• Pathology & Blood Laboratory\\n\\n_Doorstep collection available across Toopran & nearby villages._\"\n  }\n}",
-        "options": {}
-      },
-      "id": "reply-booking-link",
-      "name": "Reply: Booking & Home Sample Link",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        980,
-        280
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v19.0/YOUR_PHONE_NUMBER_ID/messages",
-        "authentication": "none",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.patientPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📄 *Download Your Diagnostic Test Report*\\n\\nDear {{ $json.patientName }},\\nYou can view and download your verified PDF report directly on our Patient Portal:\\n\\n🔗 *Official Report Download Portal:*\\nhttps://rrk-diagnostic.vercel.app/reports\\n\\n📌 *How to Access:*\\nSimply enter your registered mobile number (`{{ $json.patientPhone }}`) or your Report Code to download the calibrated PDF report.\"\n  }\n}",
-        "options": {}
-      },
-      "id": "reply-reports-portal",
-      "name": "Reply: Reports Portal Link",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        980,
+        940,
         420
       ]
     },
     {
       "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v19.0/YOUR_PHONE_NUMBER_ID/messages",
-        "authentication": "none",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
             {
-              "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
+              "leftValue": "={{ $json.actionTaken }}",
+              "rightValue": "APPOINTMENT_CREATED",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
             }
-          ]
+          ],
+          "combinator": "and"
         },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.patientPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🩺 *Asha Jyothi Preventive Health Checkup Packages*\\n\\n• *Master Health Checkup (58 Tests)* - ₹1,499\\n• *Diabetic Screening Profile* - ₹899\\n• *Senior Citizen Care Profile* - ₹1,899\\n• *Women's Wellness Profile* - ₹1,299\\n• *Cardiac Risk Profile* - ₹1,699\\n\\n🔗 *Explore All Packages & Fasting Guidelines:*\\nhttps://rrk-diagnostic.vercel.app/packages\"\n  }\n}",
         "options": {}
       },
-      "id": "reply-packages-list",
-      "name": "Reply: Health Packages & Pricing",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "if-appointment-created",
+      "name": "Was Appointment Created?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        980,
-        560
+        1180,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "Master Hub Tracker Ready",
+          "mode": "name"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Appointments",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.bookingCreated.preferredDate }}",
+            "Time": "={{ $json.bookingCreated.preferredTime }}",
+            "Patient Name": "={{ $json.bookingCreated.patientName }}",
+            "Contact": "={{ $json.bookingCreated.phone }}",
+            "Doctor": "Self / WhatsApp Bot",
+            "Service": "={{ $json.bookingCreated.service }}",
+            "Status": "New",
+            "Notes": "=WhatsApp Booking | Address: {{ $json.bookingCreated.address }}",
+            "Payment Status": "Pending at Centre",
+            "Payment Method": "Cash / UPI",
+            "Amount": "To be billed",
+            "Source": "WhatsApp In-Chat Bot",
+            "Assigned To": "={{ $json.bookingCreated.bookingType === 'home_collection' ? 'Phlebotomist' : 'Reception' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "sheets-append-chatbot-booking",
+      "name": "Google Sheets: Log In-Chat Booking",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1440,
+        340
       ]
     },
     {
@@ -330,48 +216,16 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"{{ $json.patientPhone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📍 *Asha Jyothi Diagnostic Centre, Toopran*\\n\\n🏠 *Address:*\\n13-21/1/A, Keshava Nagar Colony, Toopran, Telangana 502334\\n\\n⏰ *Working Hours:*\\n• Monday - Saturday: 7:30 AM to 8:30 PM\\n• Sunday: 7:30 AM to 1:00 PM\\n\\n🗺️ *1-Click Google Maps Navigation:*\\nhttps://www.google.com/maps/search/?api=1&query=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana\\n\\n📞 *Helpline / Call:* +91 73863 20634\"\n  }\n}",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"917386320634\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"🚨 *NEW WHATSAPP IN-CHAT BOOKING* 🚨\\n\\n👤 *Patient:* {{ $json.bookingCreated.patientName }}\\n📞 *Phone:* {{ $json.bookingCreated.phone }}\\n🧪 *Service:* {{ $json.bookingCreated.service }}\\n📍 *Type:* {{ $json.bookingCreated.bookingType }}\\n🏠 *Address:* {{ $json.bookingCreated.address || 'Clinic Walk-in' }}\\n⏰ *Slot:* {{ $json.bookingCreated.preferredTime }}\\n\\n🗺️ *1-Click Navigation:*\\nhttps://www.google.com/maps/search/?api=1&query={{ encodeURIComponent($json.bookingCreated.address + ', Toopran, Telangana') }}\\n\\n_Asha Jyothi Diagnostics Automation_\"\n  }\n}",
         "options": {}
       },
-      "id": "reply-location-timings",
-      "name": "Reply: Location, Timings & Map",
+      "id": "whatsapp-phlebotomist-alert-chatbot",
+      "name": "WhatsApp: Alert Phlebotomist / Staff",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        980,
-        700
-      ]
-    },
-    {
-      "parameters": {
-        "method": "POST",
-        "url": "https://graph.facebook.com/v19.0/YOUR_PHONE_NUMBER_ID/messages",
-        "authentication": "none",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "Bearer YOUR_WHATSAPP_ACCESS_TOKEN"
-            },
-            {
-              "name": "Content-Type",
-              "value": "application/json"
-            }
-          ]
-        },
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"to\": \"917386320634\",\n  \"type\": \"text\",\n  \"text\": {\n    \"body\": \"📩 *NEW PATIENT WHATSAPP QUERY*\\n\\n👤 *Patient:* {{ $json.patientName }}\\n📞 *Phone:* {{ $json.patientPhone }}\\n💬 *Question:* \\\"{{ $json.messageText }}\\\"\\n⏰ *Received:* {{ $json.timestamp }}\\n\\n_Asha Jyothi Diagnostics - Direct Reception Alert_\"\n  }\n}",
-        "options": {}
-      },
-      "id": "alert-staff-enquiry",
-      "name": "WhatsApp: Alert Reception Staff",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
-      "position": [
-        980,
-        840
+        1440,
+        520
       ]
     }
   ],
@@ -391,64 +245,56 @@
       "main": [
         [
           {
-            "node": "Parse Message & Detect Intent",
+            "node": "Extract Patient & Message",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Parse Message & Detect Intent": {
+    "Extract Patient & Message": {
       "main": [
         [
           {
-            "node": "Route by Patient Intent",
+            "node": "Call Conversational Engine (/api/whatsapp-bot)",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Route by Patient Intent": {
+    "Call Conversational Engine (/api/whatsapp-bot)": {
       "main": [
         [
           {
-            "node": "Reply: Booking & Home Sample Link",
+            "node": "WhatsApp: Send Conversational Reply",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "WhatsApp: Send Conversational Reply": {
+      "main": [
         [
           {
-            "node": "Reply: Reports Portal Link",
+            "node": "Was Appointment Created?",
             "type": "main",
             "index": 0
           }
-        ],
+        ]
+      ]
+    },
+    "Was Appointment Created?": {
+      "main": [
         [
           {
-            "node": "Reply: Health Packages & Pricing",
+            "node": "Google Sheets: Log In-Chat Booking",
             "type": "main",
             "index": 0
-          }
-        ],
-        [
+          },
           {
-            "node": "Reply: Location, Timings & Map",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "WhatsApp: Alert Reception Staff",
-            "type": "main",
-            "index": 0
-          }
-        ],
-        [
-          {
-            "node": "Reply: Interactive Menu",
+            "node": "WhatsApp: Alert Phlebotomist / Staff",
             "type": "main",
             "index": 0
           }
