@@ -2,71 +2,13 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { centreInfo } from '@/config/centreInfo';
+import { useCmsContent } from '@/hooks/useCmsContent';
 
 export default function DoctorsPage() {
-  const primarySpecialists = [
-    {
-      name: 'Dr. Ananya Sharma',
-      qualification: 'MD, Internal Medicine',
-      experience: '16+ Years Experience',
-      role: 'Head of Preventive Health & Internal Medicine',
-      description: 'Leads our internal medicine wing with a specialized focus on preventive health checkups, chronic diabetic management, hypertension, and endocrine disorders.',
-      quote: '“The best medicine is the one that prevents the disease through early, accurate diagnosis.”',
-      specialties: ['Preventive Screening', 'Diabetes & Hypertension', 'Thyroid Disorders', 'Metabolic Health']
-    },
-    {
-      name: 'Dr. Rajesh Menon',
-      qualification: 'MD, Radiodiagnosis',
-      experience: '14+ Years Experience',
-      role: 'Head of Imaging & Ultrasonology',
-      description: 'Supervises all advanced imaging divisions, reporting 4D ultrasound, vascular Color Doppler, low-dose digital X-Ray, and digital OPG scans with high clinical accuracy.',
-      quote: '“A clear, calibrated diagnostic image today saves a complicated story tomorrow.”',
-      specialties: ['4D Ultrasound', 'Vascular Doppler', 'Digital X-Ray & OPG', 'Abdominal Sonology']
-    },
-    {
-      name: 'Dr. S. K. Sharma',
-      qualification: 'MD, Pathology',
-      experience: '18+ Years Experience',
-      role: 'Chief Clinical Pathologist & Laboratory Director',
-      description: 'Oversees automated biochemistry, hematology, immuno-assays, and clinical microscopy ensuring every sample meets national diagnostic precision standards.',
-      quote: '“Behind every laboratory sample is a patient’s life waiting for exact scientific answers.”',
-      specialties: ['Clinical Hematology', 'Hormonal Assays', 'Biochemistry & LFT', 'Cytology & Serology']
-    }
-  ];
-
-  const consultantDoctors = [
-    {
-      title: 'Consultant Cardiologist',
-      icon: '🫀',
-      focus: '2D Echocardiography, TMT Stress Testing, Cardiac Biomarkers (TROP-T), Arrhythmias & Coronary Screening.',
-      availability: 'Available on Appointment / Weekly Specialist Clinics'
-    },
-    {
-      title: 'Consultant Neurologist',
-      icon: '🧠',
-      focus: 'Stroke risk evaluation, peripheral neuropathy screening, cervical/lumbar spine radiography reviews.',
-      availability: 'Available on Scheduled Specialist Consultation'
-    },
-    {
-      title: 'Consultant Radiologist',
-      icon: '🩻',
-      focus: 'Cross-sectional imaging, specialized pelvic and abdominal scans, musculoskeletal sonography.',
-      availability: 'Daily Diagnostic Reporting'
-    },
-    {
-      title: 'Consultant Urologist',
-      icon: '🩺',
-      focus: 'USG KUB analysis, prostate enlargement (PSA screening), renal calculi, and hematuria workups.',
-      availability: 'Available on Prior Booking'
-    },
-    {
-      title: 'Consultant Gastroenterologist',
-      icon: '🔬',
-      focus: 'Jaundice profiling, viral hepatitis workups, liver enzyme grading, and abdominal pathology review.',
-      availability: 'Weekly Clinical Review'
-    }
-  ];
+  const { content } = useCmsContent();
+  const consultantsList = content?.consultants || [];
+  const whatsappNum = content?.whatsappNumber || '919440009788';
+  const primaryPhone = content?.phones?.[0] || '94400 09788';
 
   return (
     <div className="bg-white min-h-screen pt-24 pb-20">
@@ -76,111 +18,85 @@ export default function DoctorsPage() {
 
         <div className="persp relative mx-auto max-w-3xl px-5 text-center">
           <div className="reveal3d">
-            <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-[#0a6cbe]">Medical Team & Specialists</p>
+            <span className="inline-block rounded-full bg-[#0a6cbe]/10 px-4 py-1 text-xs font-black text-[#0a6cbe] mb-3 shadow-sm">
+              🩺 MEDICAL SPECIALISTS & CONSULTANTS PANEL
+            </span>
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#12304b] sm:text-6xl">
-              Doctors who read every report <span className="grad-text">like family</span>
+              Specialists You Can <span className="grad-text">Trust</span>
             </h1>
             <p className="mt-4 text-base text-slate-600 sm:text-lg">
-              Our specialists combine decades of hospital and diagnostic experience with personalized attention in Toopran.
+              Experienced consultant specialists and senior pathologists reading your scans and blood investigations with clinical precision in Toopran.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Primary Specialists Section */}
+      {/* Consultants Grid */}
       <section className="mx-auto max-w-6xl px-5 mt-14">
-        <div className="persp grid gap-8 md:grid-cols-3">
-          {primarySpecialists.map((doc, idx) => (
-            <div key={doc.name} className="reveal3d" style={{ transitionDelay: `${idx * 0.08}s` }}>
-              <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)] hover:border-[#0a6cbe]/50 transition">
-                <div className="glare" />
-
-                {/* Experience Badge */}
-                <div className="flex items-center justify-between">
-                  <span className="rounded-full bg-[#0a6cbe]/10 px-3 py-1 text-xs font-bold text-[#0a6cbe]">
-                    {doc.experience}
-                  </span>
-                  <span className="text-xs font-semibold text-slate-400">
-                    Asha Jyothi
-                  </span>
-                </div>
-
-                {/* Name & Qualification */}
-                <h3 className="mt-4 text-2xl font-black text-[#12304b]">
-                  {doc.name}
-                </h3>
-                <p className="mt-1 text-xs font-extrabold text-[#0a6cbe] uppercase tracking-wide">
-                  {doc.qualification}
-                </p>
-                <p className="mt-1 text-xs font-medium text-slate-500">
-                  {doc.role}
-                </p>
-
-                {/* Description */}
-                <p className="mt-4 text-xs leading-relaxed text-slate-600">
-                  {doc.description}
-                </p>
-
-                {/* Quote */}
-                <blockquote className="mt-4 border-l-2 border-[#0a6cbe]/40 pl-3 text-xs italic text-slate-600 bg-slate-50 py-2 rounded-r-lg">
-                  {doc.quote}
-                </blockquote>
-
-                {/* Specialties Chips */}
-                <div className="mt-5 flex flex-wrap gap-1.5 flex-1">
-                  {doc.specialties.map((spec) => (
-                    <span key={spec} className="rounded-md border border-slate-200 bg-[#f4f8fc] px-2 py-0.5 text-[11px] font-semibold text-slate-700">
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Book Link */}
-                <div className="mt-6 pt-4 border-t border-slate-100">
-                  <Link
-                    href={`/book?doctor=${encodeURIComponent(doc.name)}`}
-                    className="block w-full rounded-full bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] py-2.5 text-center text-xs font-bold text-white shadow-sm transition hover:shadow-md hover:scale-105"
-                  >
-                    Consult Doctor
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Visiting & Consultant Specialists Panel */}
-      <section className="mx-auto max-w-6xl px-5 mt-20">
-        <div className="persp mb-10 text-center">
-          <div className="reveal3d">
-            <span className="inline-block rounded-full bg-[#0a6cbe]/10 px-3.5 py-1 text-xs font-bold text-[#0a6cbe] mb-2">
-              SPECIALIST CLINICS
-            </span>
-            <h2 className="text-3xl font-extrabold text-[#12304b] sm:text-4xl">
-              Visiting Consultant Doctors Available
-            </h2>
-            <p className="mt-2 text-sm text-slate-500">
-              Expert clinical consultants available for diagnostic reviews and clinical second opinions.
-            </p>
-          </div>
+        <div className="mb-8">
+          <h2 className="text-2xl font-black text-[#12304b]">Visiting Consultant Doctors Panel</h2>
+          <p className="text-xs text-slate-500 mt-1">Available for clinical consultations, scan reviews, and diagnostic opinions at Asha Jyothi Centre, Toopran.</p>
         </div>
 
-        <div className="persp grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {consultantDoctors.map((item, idx) => (
-            <div key={item.title} className="reveal3d" style={{ transitionDelay: `${idx * 0.06}s` }}>
-              <div className="tilt relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-[#f4f8fc] p-6 shadow-sm hover:shadow-md hover:border-[#0a6cbe]/40 transition">
+        <div className="persp grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {consultantsList.map((doc: any, idx: number) => (
+            <div key={doc.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.06}s` }}>
+              <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)] hover:border-[#0a6cbe]/40 hover:shadow-lg transition">
                 <div className="glare" />
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{item.icon}</span>
+
+                <div className="flex items-center gap-4">
+                  <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[#0a6cbe]/15 to-[#0ea5e9]/15 text-2xl font-bold text-[#0a6cbe] shrink-0">
+                    🩺
+                  </span>
                   <div>
-                    <h4 className="text-base font-extrabold text-[#12304b]">{item.title}</h4>
-                    <p className="text-[11px] font-semibold text-[#0a6cbe]">{item.availability}</p>
+                    <h3 className="text-lg font-black text-[#12304b]">{doc.name}</h3>
+                    <p className="text-xs font-bold text-[#0a6cbe]">{doc.specialty}</p>
+                    {doc.qualification && (
+                      <p className="text-[11px] font-medium text-slate-400 mt-0.5">{doc.qualification}</p>
+                    )}
                   </div>
                 </div>
-                <p className="mt-3 text-xs leading-relaxed text-slate-600">
-                  {item.focus}
-                </p>
+
+                <div className="mt-6 flex-1 space-y-2 border-t border-slate-100 pt-4 text-xs text-slate-600">
+                  {doc.experience && (
+                    <p className="flex items-center gap-2">
+                      <span className="text-[#0a6cbe] font-bold">★</span>
+                      <span>{doc.experience}</span>
+                    </p>
+                  )}
+                  {doc.timing && (
+                    <p className="flex items-center gap-2">
+                      <span className="text-slate-400">🕒</span>
+                      <span><strong>Timing:</strong> {doc.timing}</span>
+                    </p>
+                  )}
+                  {doc.availableDays && (
+                    <p className="flex items-center gap-2">
+                      <span className="text-slate-400">📅</span>
+                      <span><strong>Days:</strong> {doc.availableDays}</span>
+                    </p>
+                  )}
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-slate-100 flex items-center gap-3">
+                  <Link
+                    href={`/book?service=${encodeURIComponent(`Consultation - ${doc.specialty}`)}`}
+                    className="flex-1 rounded-full bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] py-2.5 text-center text-xs font-bold text-white shadow-sm hover:scale-105 transition"
+                  >
+                    Book Consultation
+                  </Link>
+                  <a
+                    href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi, I would like to book an appointment with ${doc.name} (${doc.specialty}).`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-[#25D366] p-2.5 text-white hover:bg-[#1fbd5a] transition"
+                    title="Enquire on WhatsApp"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
           ))}

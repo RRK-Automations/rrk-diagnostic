@@ -1,9 +1,24 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { centreInfo } from '@/config/centreInfo';
+import { useCmsContent } from '@/hooks/useCmsContent';
 
 export default function Footer() {
+  const { content } = useCmsContent();
   const currentYear = new Date().getFullYear();
+
+  const directorName = content?.directorName || 'P. Mallesh Goud';
+  const directorDesig = content?.directorDesignation || 'Director';
+  const years = content?.yearsOfExcellence || 33;
+  const estd = content?.establishedYear || 1992;
+  const address = content?.address || 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana';
+  const phones = content?.phones || ['94400 09788', '94402 82688'];
+  const landlines = content?.landlines || ['08454-235537', '08454-235538'];
+  const email = content?.email || 'ashajyothidiagnostic@gmail.com';
+  const hours = content?.operatingHours || '7:00 AM – 9:00 PM (All 7 Days)';
+  const emergency = content?.emergencySupport || '24/7 Emergency Support';
+  const discountPct = content?.discountPercentage || 25;
 
   return (
     <footer className="border-t border-slate-200 bg-[#f4f8fc] py-14">
@@ -15,17 +30,17 @@ export default function Footer() {
               AJ
             </span>
             <span className="font-extrabold text-[#12304b] text-base">
-              Asha Jyothi Diagnostics
+              {content?.centreName || 'Asha Jyothi Diagnostics'}
             </span>
           </Link>
           <div className="mt-2.5 inline-flex items-center gap-1.5 rounded-full bg-[#0a6cbe]/10 px-3 py-1 text-xs font-bold text-[#0a6cbe]">
-            <span>★</span> 33+ Years of Excellence (Estd. 1992)
+            <span>★</span> {years}+ Years of Excellence (Estd. {estd})
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate-500">
-            Trusted diagnostic care in Toopran, Medak. Under the leadership of <strong>Director P. Mallesh Goud</strong>, bringing pathology, advanced ultrasound, CT scan, digital X-Ray and cardiology under one roof.
+            Trusted diagnostic care in Toopran, Medak. Under the leadership of <strong>{directorDesig} {directorName}</strong>, bringing comprehensive laboratory, ultrasound, CT scan, digital X-Ray, and cardiology under one roof.
           </p>
           <p className="mt-2 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 rounded-lg p-2">
-            🏷️ Flat 25% Discount on all Preventive Health Packages!
+            🏷️ Flat {discountPct}% Discount on all Preventive Health Packages!
           </p>
         </div>
 
@@ -46,7 +61,7 @@ export default function Footer() {
             </li>
             <li>
               <Link href="/packages" className="transition hover:text-[#0a6cbe] font-semibold text-[#0a6cbe]">
-                Health Packages (25% OFF)
+                Health Packages ({discountPct}% OFF)
               </Link>
             </li>
             <li>
@@ -58,85 +73,71 @@ export default function Footer() {
             <li>
               <Link href="/contact" className="transition hover:text-[#0a6cbe]">Contact & Location</Link>
             </li>
-            <li>
-              <Link href="/admin/dashboard" className="transition text-slate-400 hover:text-slate-600">Staff Portal</Link>
+          </ul>
+        </div>
+
+        {/* Column 3: Consultant Doctor Specialties */}
+        <div>
+          <h4 className="text-sm font-bold uppercase tracking-wider text-[#12304b]">
+            Specialties Available
+          </h4>
+          <ul className="mt-4 space-y-2 text-xs text-slate-600 font-medium">
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Cardiologist (2D Echo / TMT)
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Radiologist & Sonologist (4D USG)
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Neurologist
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Pathologist (Automated Lab)
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Urologist
+            </li>
+            <li className="flex items-center gap-1.5">
+              <span className="text-[#0a6cbe]">🩺</span> Gastroenterologist
             </li>
           </ul>
         </div>
 
-        {/* Column 3: Top Diagnostics & Specialties */}
+        {/* Column 4: Official Contact & Location */}
         <div>
           <h4 className="text-sm font-bold uppercase tracking-wider text-[#12304b]">
-            Diagnostic Services
+            Centre & Contact
           </h4>
-          <ul className="mt-4 space-y-2 text-sm text-slate-500">
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">CT Scan & Color Doppler</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">4D Ultrasound (USG)</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">Digital X-Ray & Digital OPG</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">2D Echo & 12-Lead ECG</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">Pathology & Biochemistry</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">Thyroid & Hormonal Assay</Link></li>
-            <li><Link href="/services" className="transition hover:text-[#0a6cbe]">Doorstep Blood Collection</Link></li>
-          </ul>
-          <h5 className="mt-4 text-xs font-bold uppercase tracking-wider text-[#12304b]">
-            Consultant Specialists:
-          </h5>
-          <p className="mt-1 text-xs text-slate-500 leading-normal">
-            Cardiologist · Neurologist · Radiologist · Urologist · Gastroenterologist
-          </p>
-        </div>
-
-        {/* Column 4: Contact & Reach Us */}
-        <div>
-          <h4 className="text-sm font-bold uppercase tracking-wider text-[#12304b]">
-            Reach Us
-          </h4>
-          <ul className="mt-4 space-y-2.5 text-sm text-slate-600">
-            <li className="leading-relaxed">
-              📍 <strong>{centreInfo.address}</strong>
-            </li>
-            <li>
-              📞 <strong>Mobile:</strong>{' '}
-              <a href="tel:+919440009788" className="transition hover:text-[#0a6cbe]">+91 94400 09788</a> /{' '}
-              <a href="tel:+919440282688" className="transition hover:text-[#0a6cbe]">+91 94402 82688</a>
-            </li>
-            <li>
-              ☎️ <strong>Landline:</strong> 08454-235537, 08454-235538
-            </li>
-            <li>
-              ✉️ <strong>Email:</strong>{' '}
-              <a href={`mailto:${centreInfo.contact.email}`} className="transition hover:text-[#0a6cbe]">
-                {centreInfo.contact.email}
-              </a>
-            </li>
-            <li>
-              <a
-                href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-bold text-[#25a85c] transition hover:text-[#1fbd5a] mt-1"
-              >
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#25D366] text-white">
-                  ✓
-                </span>
-                WhatsApp: +91 94400 09788
-              </a>
-            </li>
-            <li className="text-xs text-slate-500 pt-1">
-              ⏰ <strong>Timings:</strong> 7:00 AM – 9:00 PM (All 7 Days · 24/7 Emergency Support)
-            </li>
-          </ul>
+          <div className="mt-4 space-y-2.5 text-xs text-slate-600">
+            <p>
+              📍 <strong className="text-slate-700">{address}</strong>
+            </p>
+            <p>
+              📱 <strong>Mobile:</strong> {phones.join(' · ')}
+            </p>
+            <p>
+              ☎️ <strong>Landline:</strong> {landlines.join(' · ')}
+            </p>
+            <p>
+              ✉️ <strong>Email:</strong> {email}
+            </p>
+            <p className="rounded-lg bg-emerald-100/70 p-2 text-emerald-800 font-semibold">
+              🕕 {hours}<br />
+              ⚡ {emergency}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Copyright Bar */}
-      <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-slate-200 px-5 pt-7 text-xs text-slate-400 sm:flex-row">
-        <p>© {currentYear} Asha Jyothi Diagnostic Centre. All rights reserved. Estd. 1992.</p>
-        <p className="flex items-center gap-3">
-          <span>Director: P. Mallesh Goud</span>
+      <div className="mx-auto mt-12 max-w-6xl border-t border-slate-200 pt-6 px-5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3">
+        <p>© {currentYear} {content?.centreName || 'Asha Jyothi Diagnostic Centre'}. All rights reserved.</p>
+        <div className="flex items-center gap-4">
+          <Link href="/admin" className="text-slate-400 hover:text-[#0a6cbe] transition">
+            Staff Portal / CMS Login
+          </Link>
           <span>·</span>
-          <span>Toopran, Medak, Telangana</span>
-        </p>
+          <span>{directorDesig}: {directorName}</span>
+        </div>
       </div>
     </footer>
   );

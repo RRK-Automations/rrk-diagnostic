@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { centreInfo } from '@/config/centreInfo';
-import { healthPackages } from '@/config/packages';
+import { useCmsContent } from '@/hooks/useCmsContent';
 import { createAppointment } from '@/services/appointmentApi';
 
 export default function HomePage() {
+  const { content } = useCmsContent();
   const [activeCategory, setActiveCategory] = useState<'All' | 'Pathology' | 'Radiology & Imaging' | 'Cardiology'>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -41,7 +41,7 @@ export default function HomePage() {
       });
       setHomeSuccess(true);
     } catch (err: any) {
-      setHomeError(err.message || 'Failed to submit booking. Please call +91 94400 09788 directly.');
+      setHomeError(err.message || 'Failed to submit booking. Please call directly.');
     } finally {
       setHomeLoading(false);
     }
@@ -64,93 +64,27 @@ export default function HomePage() {
     'Hormonal Assays & Serology'
   ];
 
-  const diagnosticDivisions = [
-    {
-      id: '01',
-      title: 'Pathology & Blood Laboratory',
-      category: 'Pathology',
-      image: '/images/pathology.jpg',
-      description: 'Fully automated multi-channel biochemistry, hematology, and serology analyzers for high-precision complete blood pictures and metabolic profiling.',
-      tags: ['CBC & Haemogram', 'Blood Sugar', 'Lipid Profile', 'LFT & KFT'],
-      timing: 'Same-Day (2-3 Hours)'
-    },
-    {
-      id: '02',
-      title: 'Thyroid & Hormonal Immunoassays',
-      category: 'Pathology',
-      image: '/images/thyroid.jpg',
-      description: 'High-sensitivity chemiluminescence assays for TSH, Free T3/T4, reproductive fertility hormones, and Vitamin D/B12 estimations.',
-      tags: ['TSH Ultra-sensitive', 'Free T3 / T4', 'Vitamin D & B12', 'Hormonal Assay'],
-      timing: 'Same-Day Evening'
-    },
-    {
-      id: '03',
-      title: '4D Ultrasound & Color Doppler',
-      category: 'Radiology & Imaging',
-      image: '/images/ultrasound.jpg',
-      description: 'High-definition 4D ultrasound imaging for whole abdomen, pelvic, obstetrics anomaly, and vascular arterial/venous Doppler scans.',
-      tags: ['Abdomen & Pelvis', 'Color Doppler', 'Obstetric USG', 'USG KUB'],
-      timing: 'Immediate Scan Report'
-    },
-    {
-      id: '04',
-      title: 'Digital X-Ray & Digital OPG',
-      category: 'Radiology & Imaging',
-      image: '/images/xray.jpg',
-      description: 'Low-dose high-frequency digital radiography for chest, bones, and joints, plus full panoramic dental OPG scans with instant digital reads.',
-      tags: ['Chest PA View', 'Bone & Joint', 'Digital OPG Dental', 'Instant Reads'],
-      timing: '15-20 Minutes'
-    },
-    {
-      id: '05',
-      title: 'Cardiology (2D Echo, ECG, TMT)',
-      category: 'Cardiology',
-      image: '/images/ecg.jpg',
-      description: 'Complete non-invasive cardiac evaluation suite with 12-lead digital ECG, color flow 2D Echocardiography, and computerized Treadmill Stress Test.',
-      tags: ['12-Lead ECG', '2D Echo', 'TMT Stress Test', 'TROP-T Cardiac'],
-      timing: 'Instant Reporting'
-    },
-    {
-      id: '06',
-      title: 'Urine, Stool & Clinical Microscopy',
-      category: 'Pathology',
-      image: '/images/urine.jpg',
-      description: 'Automated strip chemistry, clinical sediment microscopy, and stool hanging-drop preparations for acute infections and gastrointestinal markers.',
-      tags: ['Complete Urine (CUE)', 'Urine Culture', 'Stool Hanging Drop', 'Ketone Bodies'],
-      timing: '2 Hours'
-    },
-    {
-      id: '07',
-      title: 'Fever & Acute Infectious Panels',
-      category: 'Pathology',
-      image: '/images/fever.jpg',
-      description: 'Rapid, calibrated testing for acute fevers including Malaria Smears/Antigen (Pf/Pv), Widal slide/tube agglutination for typhoid, and Dengue NS1.',
-      tags: ['Malaria Panel', 'Widal Typhoid', 'Dengue NS1', 'Viral Markers'],
-      timing: '1-2 Hours (Emergency)'
-    },
-    {
-      id: '08',
-      title: 'Jaundice & Liver Health Workup',
-      category: 'Pathology',
-      image: '/images/jaundice.jpg',
-      description: 'Bilirubin fractions (Total, Direct, Indirect) and hepatic enzymes (SGOT, SGPT, ALP) to grade and monitor acute and chronic liver conditions.',
-      tags: ['Bilirubin Fractions', 'Liver Enzymes (SGOT/SGPT)', 'Viral Hepatitis', 'Proteins'],
-      timing: 'Same-Day'
-    }
-  ];
+  const packagesList = content?.packages || [];
+  const divisionsList = content?.divisions || [];
+  const servicesList = content?.services || [];
+  const consultantsList = content?.consultants || [];
 
-  const filteredServices = centreInfo.services.filter((s) => {
+  const filteredServices = servicesList.filter((s: any) => {
     const matchesCategory = activeCategory === 'All' || s.category === activeCategory;
     const matchesSearch =
-      s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      s.description.toLowerCase().includes(searchQuery.toLowerCase());
+      (s.name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (s.description || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
+  const primaryPhone = content?.phones?.[0] || '94400 09788';
+  const whatsappNum = content?.whatsappNumber || '919440009788';
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Asha Jyothi Diagnostic Centre, Behind Surya Medical, Main Road, Toopran, Telangana 502334')}`;
+
   return (
     <div className="overflow-hidden bg-white">
-      {/* 1. HERO SECTION WITH CLEAR, VIVID VIDEO BACKGROUND */}
-      <section id="home" className="relative min-h-[92vh] flex items-center overflow-hidden bg-slate-0 pt-24 pb-16 text-white">
+      {/* 1. HERO SECTION WITH CLEAR VIDEO BACKGROUND & CMS DYNAMIC CONTENT */}
+      <section id="home" className="relative min-h-[92vh] flex items-center overflow-hidden bg-slate-950 pt-24 pb-16 text-white">
         {/* Crisp Background Video */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <video
@@ -158,14 +92,13 @@ export default function HomePage() {
             loop
             muted
             playsInline
-            poster="/images/hero-poster.jpg"
+            poster={content?.heroPosterUrl || '/images/hero-poster.jpg'}
             className="h-full w-full object-cover scale-105 opacity-60"
           >
-            <source src="/videos/hero.mp4" type="video/mp4" />
+            <source src={content?.heroVideoUrl || '/videos/hero.mp4'} type="video/mp4" />
           </video>
-          {/* Subtle Dark Medical Overlay to make text pop while keeping video clearly visible */}
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-900/75 to-slate-900/40" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(255, 255, 255, 0.7)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(10,25,47,0.7)_100%)]" />
         </div>
 
         <div className="persp relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-8">
@@ -175,18 +108,24 @@ export default function HomePage() {
               {/* 33-Year Pill Badge */}
               <div className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-sky-400/40 bg-sky-950/60 px-4 py-1.5 text-xs font-bold text-sky-300 shadow-sm backdrop-blur">
                 <span className="flex h-2.5 w-2.5 rounded-full bg-sky-400 animate-ping" />
-                <span>★ 33+ Years of Diagnostic Excellence · Estd. 1992 · Toopran</span>
+                <span>★ {content?.yearsOfExcellence || 33}+ Years of Diagnostic Excellence · Estd. {content?.establishedYear || 1992} · Toopran</span>
               </div>
 
               {/* Headline */}
               <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Precision <span className="grad-text">Diagnostics.</span><br />
-                Compassionate Care.
+                {content?.heroHeadline ? (
+                  content.heroHeadline
+                ) : (
+                  <>
+                    Precision <span className="grad-text">Diagnostics.</span><br />
+                    Compassionate Care.
+                  </>
+                )}
               </h1>
 
               {/* Subheading */}
               <p className="mt-5 text-base font-medium leading-relaxed text-slate-200 sm:text-lg max-w-2xl">
-                Under the leadership of <strong>Director P. Mallesh Goud</strong>, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.
+                {content?.heroSubheading || `Under the leadership of Director ${content?.directorName || 'P. Mallesh Goud'}, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.`}
               </p>
 
               {/* 25% Discount Banner */}
@@ -194,7 +133,7 @@ export default function HomePage() {
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-slate-950 font-black text-xs shrink-0">
                   %
                 </span>
-                <span>Special Promotion: Flat <strong>25% Discount</strong> on all 10 Official Health Checkup Packages!</span>
+                <span>{content?.discountBannerText || 'Special Promotion: Flat 25% Discount on all 10 Official Health Checkup Packages!'}</span>
               </div>
 
               {/* CTA Action Buttons */}
@@ -210,7 +149,7 @@ export default function HomePage() {
                   href="/packages"
                   className="inline-flex items-center gap-2 rounded-full border border-sky-400/40 bg-sky-950/40 px-6 py-3.5 text-sm font-bold text-sky-200 shadow-sm backdrop-blur transition hover:bg-sky-900/60 hover:border-sky-300"
                 >
-                  <span>🏷️ View 25% Off Packages</span>
+                  <span>🏷️ View Packages ({content?.discountPercentage || 25}% Off)</span>
                 </Link>
                 <Link
                   href="/reports"
@@ -226,7 +165,7 @@ export default function HomePage() {
                   <span className="text-emerald-400 font-bold">✓</span> Same-Day Digital Reports
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="text-emerald-400 font-bold">✓</span> Walk-ins 7 AM – 9 PM (24/7 Emergency)
+                  <span className="text-emerald-400 font-bold">✓</span> Walk-ins {content?.operatingHours || '7 AM – 9 PM'} ({content?.emergencySupport || '24/7 Emergency'})
                 </span>
                 <span className="flex items-center gap-1.5">
                   <span className="text-emerald-400 font-bold">✓</span> Doorstep Phlebotomy in Toopran
@@ -247,7 +186,7 @@ export default function HomePage() {
                     poster="/images/pathology.jpg"
                     className="h-full w-full object-cover zoom-img"
                   >
-                    <source src="/videos/lab.mp4" type="video/mp4" />
+                    <source src={content?.labVideoUrl || '/videos/lab.mp4'} type="video/mp4" />
                   </video>
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent pointer-events-none" />
                   <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -258,7 +197,7 @@ export default function HomePage() {
                       Hospital-Grade Diagnostic Infrastructure
                     </h3>
                     <p className="text-xs text-sky-200">
-                      Behind Surya Medical & General Stores, Main Road, Toopran
+                      {content?.address || 'Behind Surya Medical & General Stores, Main Road, Toopran'}
                     </p>
                   </div>
                 </div>
@@ -266,14 +205,14 @@ export default function HomePage() {
 
               {/* Floaty Badge 1: 33+ Years */}
               <div className="floaty absolute -left-4 -top-6 rounded-2xl border border-sky-400/30 bg-slate-900/90 text-white px-4 py-3 shadow-xl backdrop-blur sm:-left-6">
-                <div className="text-xl font-black text-sky-400">33+ Yrs</div>
-                <div className="text-[10px] font-bold text-slate-300">Excellence Since 1992</div>
+                <div className="text-xl font-black text-sky-400">{content?.yearsOfExcellence || 33}+ Yrs</div>
+                <div className="text-[10px] font-bold text-slate-300">Excellence Since {content?.establishedYear || 1992}</div>
               </div>
 
               {/* Floaty Badge 2: 24/7 Support */}
               <div className="floaty-slow absolute -bottom-5 -right-4 rounded-2xl border border-emerald-400/30 bg-slate-900/90 text-white px-4 py-3 shadow-xl backdrop-blur sm:-right-6">
                 <div className="text-xl font-black text-emerald-400">24/7</div>
-                <div className="text-[10px] font-bold text-slate-300">Emergency Support</div>
+                <div className="text-[10px] font-bold text-slate-300">{content?.emergencySupport || 'Emergency Support'}</div>
               </div>
             </div>
           </div>
@@ -301,10 +240,10 @@ export default function HomePage() {
             <div className="tilt relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-7 text-center shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)]">
               <div className="glare" />
               <div className="depth bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] bg-clip-text text-4xl font-black text-transparent lg:text-5xl">
-                <span data-count="33" data-decimals="0">0</span>+
+                <span data-count={String(content?.yearsOfExcellence || 33)} data-decimals="0">0</span>+
               </div>
               <div className="depth mt-2 text-sm font-extrabold text-[#12304b]">Years of Excellence</div>
-              <div className="depth mt-1 text-xs text-slate-500">Established in 1992</div>
+              <div className="depth mt-1 text-xs text-slate-500">Established in {content?.establishedYear || 1992}</div>
             </div>
           </div>
 
@@ -312,10 +251,10 @@ export default function HomePage() {
             <div className="tilt relative overflow-hidden rounded-2xl border border-emerald-200/80 bg-emerald-50/40 p-7 text-center shadow-[0_16px_40px_-28px_rgba(16,185,129,0.25)]">
               <div className="glare" />
               <div className="depth bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-4xl font-black text-transparent lg:text-5xl">
-                <span data-count="25" data-decimals="0">0</span>%
+                <span data-count={String(content?.discountPercentage || 25)} data-decimals="0">0</span>%
               </div>
               <div className="depth mt-2 text-sm font-extrabold text-[#12304b]">Discount on Packages</div>
-              <div className="depth mt-1 text-xs text-emerald-700 font-semibold">All 10 Health Profiles</div>
+              <div className="depth mt-1 text-xs text-emerald-700 font-semibold">All {packagesList.length} Health Profiles</div>
             </div>
           </div>
 
@@ -326,7 +265,7 @@ export default function HomePage() {
                 <span data-count="14" data-decimals="0">0</span>h
               </div>
               <div className="depth mt-2 text-sm font-extrabold text-[#12304b]">Open Every Day</div>
-              <div className="depth mt-1 text-xs text-slate-500">7 AM – 9 PM (+ 24/7 Emergency)</div>
+              <div className="depth mt-1 text-xs text-slate-500">{content?.operatingHours || '7 AM – 9 PM'}</div>
             </div>
           </div>
 
@@ -379,7 +318,7 @@ export default function HomePage() {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <a
-                  href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent('Hi Asha Jyothi Diagnostics, I would like to book a Home Sample Collection in Toopran.')}`}
+                  href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('Hi Asha Jyothi Diagnostics, I would like to book a Home Sample Collection in Toopran.')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-xs font-bold text-white shadow-md hover:bg-[#1fbd5a] transition hover:scale-105"
@@ -387,10 +326,10 @@ export default function HomePage() {
                   <span>💬 Instant WhatsApp Booking</span>
                 </a>
                 <a
-                  href="tel:+919440009788"
+                  href={`tel:+91${primaryPhone.replace(/\s+/g, '')}`}
                   className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-xs font-bold text-white hover:bg-white/20 transition"
                 >
-                  <span>📞 Call: +91 94400 09788</span>
+                  <span>📞 Call: +91 {primaryPhone}</span>
                 </a>
               </div>
             </div>
@@ -479,21 +418,16 @@ export default function HomePage() {
                         onChange={(e) => setHomeBooking({ ...homeBooking, service: e.target.value })}
                         className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20 bg-white"
                       >
-                        <option value="Whole Body Checkup (₹7,760)">Whole Body Checkup (₹7,760 - 25% OFF)</option>
-                        <option value="Master Health Checkup (₹4,720)">Master Health Checkup (₹4,720 - 25% OFF)</option>
-                        <option value="Executive Health Checkup (₹4,960)">Executive Health Checkup (₹4,960 - 25% OFF)</option>
-                        <option value="Senior Citizen Health Checkup (₹6,320)">Senior Citizen Health Checkup (₹6,320 - 25% OFF)</option>
-                        <option value="Well Women Checkup (₹3,400)">Well Women Checkup (₹3,400 - 25% OFF)</option>
-                        <option value="Well Men Checkup (₹4,400)">Well Men Checkup (₹4,400 - 25% OFF)</option>
-                        <option value="Diabetic Profile (₹3,360)">Diabetic Profile (₹3,360 - 25% OFF)</option>
-                        <option value="Antenatal Profile (₹2,440)">Antenatal Profile (₹2,440 - 25% OFF)</option>
-                        <option value="General Health Checkup (₹2,320)">General Health Checkup (₹2,320 - 25% OFF)</option>
-                        <option value="Heart Checkup (₹2,880)">Heart Checkup (₹2,880 - 25% OFF)</option>
-                        <option value="Complete Blood Picture (CBP)">Complete Blood Picture (CBP / CBC - ₹350)</option>
-                        <option value="Thyroid Profile (T3, T4, TSH)">Thyroid Profile (T3, T4, TSH - ₹650)</option>
-                        <option value="Lipid Profile (Fasting)">Lipid Profile (Fasting - ₹700)</option>
-                        <option value="Liver Function Test (LFT)">Liver Function Test (LFT - ₹800)</option>
-                        <option value="Kidney Function Test (KFT)">Kidney Function Test (KFT - ₹750)</option>
+                        {packagesList.map((p: any) => (
+                          <option key={p.id} value={`${p.name} (₹${p.price})`}>
+                            {p.name} (Offer ₹{p.price?.toLocaleString()} - {p.badge || '25% OFF'})
+                          </option>
+                        ))}
+                        {servicesList.slice(0, 10).map((s: any) => (
+                          <option key={s.id} value={`${s.name} (₹${s.price})`}>
+                            {s.name} (₹{s.price})
+                          </option>
+                        ))}
                       </select>
                     </div>
 
@@ -566,30 +500,30 @@ export default function HomePage() {
           <div className="persp mx-auto mb-16 max-w-2xl text-center">
             <div className="reveal3d">
               <span className="inline-block rounded-full bg-emerald-100 px-4 py-1 text-xs font-extrabold text-emerald-800 mb-3 shadow-sm">
-                🏷️ OFFICIAL HEALTH CHECKUPS · FLAT 25% DISCOUNT
+                🏷️ OFFICIAL HEALTH CHECKUPS · FLAT {content?.discountPercentage || 25}% DISCOUNT
               </span>
               <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-[#12304b] sm:text-5xl">
                 Popular Preventive <span className="grad-text">Health Packages</span>
               </h2>
               <p className="mt-4 text-base text-slate-600">
-                10 doctor-designed diagnostic packages covering total body profiling, cardiac health, diabetes, women&apos;s wellness, and senior care in Toopran.
+                Doctor-designed diagnostic packages covering total body profiling, cardiac health, diabetes, women&apos;s wellness, and senior care in Toopran.
               </p>
             </div>
           </div>
 
           <div className="persp grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
-            {healthPackages.slice(0, 6).map((pkg, idx) => (
-              <div key={pkg.id} className="reveal3d" style={{ transitionDelay: `${idx * 0.06}s` }}>
+            {packagesList.slice(0, 6).map((pkg: any, idx: number) => (
+              <div key={pkg.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.06}s` }}>
                 <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)] transition hover:border-[#0a6cbe]/50 hover:shadow-xl">
                   <div className="glare" />
 
                   {/* Top Badge Row */}
                   <div className="flex items-center justify-between gap-2">
                     <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800">
-                      25% DISCOUNT
+                      {pkg.badge || '25% DISCOUNT'}
                     </span>
                     <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-0.5 rounded-full">
-                      {pkg.testsCount} Tests
+                      {pkg.testsCount || pkg.tests?.length || 0} Tests
                     </span>
                   </div>
 
@@ -604,14 +538,18 @@ export default function HomePage() {
                   <div className="mt-5 rounded-2xl bg-[#f4f8fc] p-4 border border-slate-200">
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-black text-[#0a6cbe]">
-                        ₹{pkg.price.toLocaleString()}
+                        ₹{pkg.price?.toLocaleString()}
                       </span>
-                      <span className="text-sm font-semibold text-slate-400 line-through">
-                        ₹{pkg.actualPrice.toLocaleString()}
-                      </span>
-                      <span className="ml-auto text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
-                        Save ₹{(pkg.actualPrice - pkg.price).toLocaleString()}
-                      </span>
+                      {pkg.actualPrice > pkg.price && (
+                        <span className="text-sm font-semibold text-slate-400 line-through">
+                          ₹{pkg.actualPrice?.toLocaleString()}
+                        </span>
+                      )}
+                      {pkg.actualPrice > pkg.price && (
+                        <span className="ml-auto text-xs font-bold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full">
+                          Save ₹{(pkg.actualPrice - pkg.price).toLocaleString()}
+                        </span>
+                      )}
                     </div>
                     <div className="mt-2 text-[11px] font-medium text-slate-600 flex items-center gap-1">
                       <span>⚠️ Fasting:</span>
@@ -625,13 +563,13 @@ export default function HomePage() {
                       Key Tests Included:
                     </div>
                     <ul className="space-y-1.5 text-xs text-slate-600">
-                      {pkg.tests.slice(0, 4).map((test, tIdx) => (
+                      {(pkg.tests || []).slice(0, 4).map((test: string, tIdx: number) => (
                         <li key={tIdx} className="flex items-start gap-1.5">
                           <span className="text-[#0a6cbe] font-bold">✓</span>
                           <span className="line-clamp-1">{test}</span>
                         </li>
                       ))}
-                      {pkg.tests.length > 4 && (
+                      {pkg.tests && pkg.tests.length > 4 && (
                         <li className="text-[11px] font-semibold text-[#0a6cbe] pt-1">
                           + {pkg.tests.length - 4} more tests in package
                         </li>
@@ -648,7 +586,7 @@ export default function HomePage() {
                       Book Home Collection
                     </Link>
                     <a
-                      href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(`Hi, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}`}
+                      href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="rounded-full bg-[#25D366] p-2.5 text-white hover:bg-[#1fbd5a] transition"
@@ -670,7 +608,7 @@ export default function HomePage() {
                 href="/packages"
                 className="inline-flex items-center gap-2 rounded-full border border-[#0a6cbe]/40 bg-[#f4f8fc] px-8 py-4 text-sm font-bold text-[#0a6cbe] shadow-sm transition hover:bg-[#0a6cbe]/5 hover:border-[#0a6cbe]/70"
               >
-                <span>View All 10 Health Packages & Full Test Lists</span>
+                <span>View All {packagesList.length} Health Packages & Full Test Lists</span>
                 <span>→</span>
               </Link>
             </div>
@@ -678,7 +616,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 6. 8 CORE DIAGNOSTIC DIVISIONS WITH CLEAR, CRISP PHOTOS */}
+      {/* 6. 8 CORE DIAGNOSTIC DIVISIONS */}
       <section id="services" className="relative py-24 bg-[#f4f8fc]">
         <div aria-hidden="true" className="absolute -right-40 top-1/3 h-[460px] w-[460px] rounded-full bg-[#0ea5e9]/10 blur-[130px] pointer-events-none" />
 
@@ -690,18 +628,18 @@ export default function HomePage() {
                 Comprehensive Scans & <span className="grad-text">Laboratory Divisions</span>
               </h2>
               <p className="mt-4 text-slate-500">
-                Eight specialized clinical diagnostic divisions operating in-house with calibrated precision in Toopran.
+                Specialized clinical diagnostic divisions operating in-house with calibrated precision in Toopran.
               </p>
             </div>
           </div>
 
           <div className="persp grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
-            {diagnosticDivisions.map((division, idx) => (
-              <div key={division.id} className="reveal3d" style={{ transitionDelay: `${idx * 0.05}s` }}>
+            {divisionsList.map((division: any, idx: number) => (
+              <div key={division.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.05}s` }}>
                 <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)] transition hover:border-[#0a6cbe]/40">
                   <div className="glare" />
 
-                  {/* Division Image - Displayed with standard img for instant rendering */}
+                  {/* Division Image */}
                   <div className="relative aspect-[16/11] w-full overflow-hidden bg-slate-900">
                     <img
                       src={division.image}
@@ -728,7 +666,7 @@ export default function HomePage() {
                     </p>
 
                     <div className="mt-4 flex flex-wrap gap-1.5">
-                      {division.tags.map((tag, tIdx) => (
+                      {(division.tags || []).map((tag: string, tIdx: number) => (
                         <span key={tIdx} className="rounded-md border border-slate-200 bg-[#f4f8fc] px-2 py-0.5 text-[10px] font-semibold text-[#0a6cbe]">
                           {tag}
                         </span>
@@ -803,7 +741,7 @@ export default function HomePage() {
 
           {/* Test Cards Table / Grid */}
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredServices.map((service) => (
+            {filteredServices.map((service: any) => (
               <div
                 key={service.id}
                 className="tilt rounded-2xl border border-slate-200 bg-[#f4f8fc] p-5 shadow-sm hover:border-[#0a6cbe]/40 hover:shadow-md transition flex flex-col justify-between"
@@ -864,8 +802,8 @@ export default function HomePage() {
           </div>
 
           <div className="persp grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {centreInfo.consultantSpecialties.map((spec, idx) => (
-              <div key={spec} className="reveal3d" style={{ transitionDelay: `${idx * 0.08}s` }}>
+            {consultantsList.map((doc: any, idx: number) => (
+              <div key={doc.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.08}s` }}>
                 <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm hover:shadow-md transition hover:border-[#0a6cbe]/40">
                   <div className="glare" />
                   <div className="flex items-center gap-4">
@@ -873,13 +811,17 @@ export default function HomePage() {
                       🩺
                     </span>
                     <div>
-                      <h4 className="text-lg font-extrabold text-[#12304b]">{spec}</h4>
-                      <p className="text-xs font-semibold text-[#0a6cbe]">Consultant Specialist</p>
+                      <h4 className="text-lg font-extrabold text-[#12304b]">{doc.name || doc.specialty}</h4>
+                      <p className="text-xs font-semibold text-[#0a6cbe]">{doc.specialty}</p>
+                      {doc.qualification && (
+                        <p className="text-[10px] text-slate-400 font-medium">{doc.qualification}</p>
+                      )}
                     </div>
                   </div>
-                  <p className="mt-4 text-xs leading-relaxed text-slate-600">
-                    Available for specialized clinical reviews, second opinions, and diagnostic scan evaluations at Asha Jyothi Centre, Toopran.
-                  </p>
+                  <div className="mt-4 text-xs leading-relaxed text-slate-600 space-y-1">
+                    {doc.timing && <p>🕒 <strong>Timing:</strong> {doc.timing}</p>}
+                    {doc.availableDays && <p>📅 <strong>Days:</strong> {doc.availableDays}</p>}
+                  </div>
                 </div>
               </div>
             ))}
@@ -899,7 +841,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. 3D CTA BANNER */}
+      {/* 9. 3D CTA BANNER WITH GOOGLE MAPS NAVIGATION */}
       <section id="contact-cta" className="relative py-20 bg-white">
         <div className="persp mx-auto max-w-6xl px-5">
           <div className="reveal3d">
@@ -910,18 +852,18 @@ export default function HomePage() {
 
               <div className="depth relative z-10">
                 <span className="inline-block rounded-full bg-white/20 backdrop-blur px-4 py-1 text-xs font-bold tracking-wide text-white mb-4">
-                  33 Years of Trust in Toopran
+                  {content?.yearsOfExcellence || 33} Years of Trust in Toopran
                 </span>
                 <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
                   Book your test today — reports the very same day
                 </h2>
                 <p className="mx-auto mt-4 max-w-xl text-sky-100 text-base">
-                  Walk in any time, or let us collect your samples at home. Our care team is available from 7 AM to 9 PM, every single day.
+                  Walk in any time, or let us collect your samples at home. Our care team is available from {content?.operatingHours || '7 AM to 9 PM'}, every single day.
                 </p>
 
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                   <a
-                    href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`}
+                    href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(content?.whatsappPrefilledMessage || 'Hi Asha Jyothi, I would like to book a test.')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-8 py-4 text-sm font-bold text-white transition hover:bg-[#1fbd5a] hover:shadow-[0_12px_44px_-10px_rgba(37,211,102,0.7)] hover:scale-105"
@@ -932,16 +874,24 @@ export default function HomePage() {
                     <span>Book on WhatsApp</span>
                   </a>
                   <a
-                    href="tel:+919440009788"
+                    href={mapUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
+                  >
+                    <span>📍 Google Maps Directions</span>
+                  </a>
+                  <a
+                    href={`tel:+91${primaryPhone.replace(/\s+/g, '')}`}
                     className="inline-flex items-center gap-2.5 rounded-full border border-white/40 bg-white/10 px-8 py-4 text-sm font-bold text-white backdrop-blur transition hover:bg-white/20"
                   >
-                    <span>📞 +91 94400 09788</span>
+                    <span>📞 +91 {primaryPhone}</span>
                   </a>
                 </div>
 
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-xs text-sky-100">
-                  <span>📍 {centreInfo.address}</span>
-                  <span>🕕 Open 7 AM – 9 PM, All Days (24/7 Emergency)</span>
+                  <span>📍 {content?.address}</span>
+                  <span>🕕 Open {content?.operatingHours} ({content?.emergencySupport})</span>
                 </div>
               </div>
             </div>

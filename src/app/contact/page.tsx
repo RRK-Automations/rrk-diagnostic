@@ -1,19 +1,44 @@
 'use client';
 
 import React, { useState } from 'react';
-import { centreInfo } from '@/config/centreInfo';
+import { useCmsContent } from '@/hooks/useCmsContent';
+import { 
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock, 
+  MessageSquare, 
+  Send, 
+  CheckCircle, 
+  AlertCircle, 
+  Loader2, 
+  ExternalLink,
+  UserCheck
+} from 'lucide-react';
 
 export default function ContactPage() {
+  const { content } = useCmsContent();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
-    service: 'General Diagnostic Enquiry',
+    service: '',
     message: ''
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const directorName = content?.directorName || 'P. Mallesh Goud';
+  const directorDesig = content?.directorDesignation || 'Director';
+  const address = content?.address || 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana';
+  const phones = content?.phones || ['94400 09788', '94402 82688'];
+  const landlines = content?.landlines || ['08454-235537', '08454-235538'];
+  const email = content?.email || 'ashajyothidiagnostic@gmail.com';
+  const hours = content?.operatingHours || '7:00 AM – 9:00 PM (All 7 Days)';
+  const emergency = content?.emergencySupport || '24/7 Emergency Support';
+  const whatsappNum = content?.whatsappNumber || '919440009788';
+  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Asha Jyothi Diagnostic Centre, Behind Surya Medical, Main Road, Toopran, Telangana 502334')}`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,239 +66,326 @@ export default function ContactPage() {
 
   return (
     <div className="bg-white min-h-screen pt-24 pb-20">
-      {/* Header */}
+      {/* Header Banner */}
       <section className="relative overflow-hidden bg-[#f4f8fc] py-16 border-b border-slate-200">
         <div aria-hidden="true" className="absolute -top-32 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-sky-400/15 blur-[130px] pointer-events-none" />
 
         <div className="persp relative mx-auto max-w-3xl px-5 text-center">
           <div className="reveal3d">
-            <span className="inline-block rounded-full bg-[#0a6cbe]/10 px-4 py-1.5 text-xs font-bold text-[#0a6cbe] mb-3">
-              📍 TOOPRAN, MEDAK DISTRICT
+            <span className="inline-block rounded-full bg-[#0a6cbe]/10 px-4 py-1.5 text-xs font-bold text-[#0a6cbe] mb-3 shadow-sm">
+              📍 TOOPRAN, MEDAK DISTRICT · ESTD. 1992
             </span>
             <h1 className="text-4xl font-extrabold leading-tight tracking-tight text-[#12304b] sm:text-6xl">
               Contact & <span className="grad-text">Location</span>
             </h1>
             <p className="mt-4 text-base text-slate-600 sm:text-lg">
-              Have questions about scan pricing, fasting guidelines, or home sample collection? Our team is available 7 AM to 9 PM, every day.
+              Visit our centre in Toopran or schedule a doorstep home sample collection. Open 7 days a week from 7 AM to 9 PM.
             </p>
           </div>
         </div>
       </section>
 
       {/* Main Content Grid */}
-      <section className="mx-auto max-w-6xl px-5 mt-14">
-        <div className="grid gap-12 lg:grid-cols-12">
-          {/* Left Column: Official Contact Card */}
+      <section className="mx-auto max-w-6xl px-5 mt-12">
+        <div className="grid gap-10 lg:grid-cols-12">
+          
+          {/* Left Column: Official Location & Contact Card */}
           <div className="lg:col-span-5 space-y-6">
-            <div className="tilt rounded-3xl border border-slate-200 bg-white p-7 shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)]">
-              <div className="glare" />
-              <div className="flex items-center gap-2.5">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#0a6cbe] to-[#0ea5e9] text-xs font-black text-white">
-                  AJ
+            
+            {/* Contact Details Card */}
+            <div className="bg-slate-900 text-slate-300 rounded-3xl p-7 shadow-xl border border-slate-800 space-y-6">
+              <div>
+                <span className="inline-block px-3 py-1 bg-[#0a6cbe]/20 text-sky-400 text-[10px] font-bold uppercase tracking-wider rounded-full mb-2">
+                  Official Diagnostic Centre
                 </span>
-                <div>
-                  <h3 className="text-lg font-black text-[#12304b]">Asha Jyothi Diagnostic Centre</h3>
-                  <p className="text-[11px] font-semibold text-[#0a6cbe]">33+ Years of Excellence (Estd. 1992)</p>
+                <h3 className="text-2xl font-black text-white tracking-tight">
+                  {content?.centreName || 'Asha Jyothi Diagnostic Centre'}
+                </h3>
+                <p className="text-xs text-slate-400 mt-1">
+                  33+ Years of Diagnostic Excellence · Estd. 1992
+                </p>
+              </div>
+
+              <div className="space-y-4 text-xs border-t border-slate-800 pt-5">
+                {/* Director */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-sky-400 shrink-0">
+                    <UserCheck className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">{directorDesig}</h4>
+                    <p className="text-sky-300 font-bold text-sm mt-0.5">{directorName}</p>
+                  </div>
+                </div>
+
+                {/* Address */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-sky-400 shrink-0">
+                    <MapPin className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">Centre Location & Address</h4>
+                    <p className="text-slate-300 mt-0.5 leading-relaxed">
+                      {address}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Mobile Hotlines */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-emerald-400 shrink-0">
+                    <Phone className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">Direct Mobile Hotline</h4>
+                    <p className="text-slate-300 mt-0.5 space-x-2">
+                      {phones.map((phone: string, idx: number) => (
+                        <span key={idx}>
+                          <a href={`tel:+91${phone.replace(/\s+/g, '')}`} className="font-bold text-emerald-400 hover:underline">
+                            +91 {phone}
+                          </a>
+                          {idx < phones.length - 1 && ' · '}
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Landline */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-sky-400 shrink-0">
+                    <Phone className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">Official Landlines</h4>
+                    <p className="text-slate-300 mt-0.5 font-semibold">
+                      {landlines.join(', ')}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-sky-400 shrink-0">
+                    <Mail className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">Email Address</h4>
+                    <a href={`mailto:${email}`} className="text-sky-400 hover:underline mt-0.5 block">
+                      {email}
+                    </a>
+                  </div>
+                </div>
+
+                {/* Timings */}
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-slate-800 rounded-xl text-amber-400 shrink-0">
+                    <Clock className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-xs">Working Hours</h4>
+                    <p className="text-slate-300 mt-0.5">{hours}</p>
+                    <p className="text-emerald-400 font-bold text-[11px] mt-0.5">⚡ {emergency}</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-6 space-y-4 text-xs text-slate-600">
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">👤</span>
-                  <div>
-                    <strong className="text-slate-800">Director:</strong>
-                    <p className="text-sm font-bold text-[#12304b]">P. Mallesh Goud</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">📍</span>
-                  <div>
-                    <strong className="text-slate-800">Official Address:</strong>
-                    <p className="mt-0.5 leading-relaxed font-medium">
-                      Behind Surya Medical & General Stores, Main Road, Toopran - 502 334, Medak Dist, Telangana.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">📞</span>
-                  <div>
-                    <strong className="text-slate-800">Mobile Hotline:</strong>
-                    <p className="mt-0.5">
-                      <a href="tel:+919440009788" className="font-bold text-[#0a6cbe] hover:underline">+91 94400 09788</a> /{' '}
-                      <a href="tel:+919440282688" className="font-bold text-[#0a6cbe] hover:underline">+91 94402 82688</a>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">☎️</span>
-                  <div>
-                    <strong className="text-slate-800">Landline:</strong>
-                    <p className="mt-0.5 font-semibold text-slate-700">08454-235537, 08454-235538</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">✉️</span>
-                  <div>
-                    <strong className="text-slate-800">Email:</strong>
-                    <p className="mt-0.5">
-                      <a href={`mailto:${centreInfo.contact.email}`} className="text-[#0a6cbe] hover:underline">
-                        {centreInfo.contact.email}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <span className="text-base shrink-0">⏰</span>
-                  <div>
-                    <strong className="text-slate-800">Working Hours:</strong>
-                    <p className="mt-0.5">7:00 AM – 9:00 PM (All 7 Days · 24/7 Emergency Support)</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Direct WhatsApp CTA */}
-              <div className="mt-6 pt-5 border-t border-slate-100">
+              {/* Action Buttons */}
+              <div className="pt-2 space-y-3">
                 <a
-                  href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`}
+                  href={mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 w-full rounded-full bg-[#25D366] py-3 text-xs font-bold text-white shadow-sm transition hover:bg-[#1fbd5a] hover:shadow-md"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] hover:from-[#095ca1] hover:to-[#0284c7] text-white font-bold text-xs rounded-2xl transition shadow-md hover:scale-[1.02]"
+                >
+                  <MapPin className="h-4 w-4" />
+                  <span>Directions on Google Maps</span>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+
+                <a
+                  href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(content?.whatsappPrefilledMessage || 'Hi Asha Jyothi Diagnostics, I would like to enquire about diagnostic scan pricing.')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#25D366] hover:bg-[#1fbd5a] text-white font-bold text-xs rounded-2xl transition shadow-md"
                 >
                   <span>💬 Message on WhatsApp</span>
                 </a>
               </div>
             </div>
+
+            {/* Embedded Google Map Frame */}
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-2 shadow-sm">
+              <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
+                <iframe
+                  title="Asha Jyothi Diagnostic Centre Location Map"
+                  src="https://maps.google.com/maps?q=Behind+Surya+Medical+Main+Road+Toopran+Telangana+502334&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  allowFullScreen
+                />
+              </div>
+              <div className="p-3 text-[11px] text-slate-500 font-medium flex items-center justify-between">
+                <span>📍 Behind Surya Medical & General Stores, Main Road, Toopran</span>
+                <a href={mapUrl} target="_blank" rel="noopener noreferrer" className="text-[#0a6cbe] font-bold hover:underline">
+                  View Full Map →
+                </a>
+              </div>
+            </div>
+
           </div>
 
-          {/* Right Column: Interactive Contact Form */}
+          {/* Right Column: Interactive Enquiry Form */}
           <div className="lg:col-span-7">
-            <div className="tilt rounded-3xl border border-slate-200 bg-white p-8 shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)]">
-              <div className="glare" />
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-10 shadow-sm">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-5 mb-6">
+                <div className="p-3 bg-[#0a6cbe]/10 text-[#0a6cbe] rounded-2xl">
+                  <MessageSquare className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black text-slate-900 tracking-tight">Submit an Online Enquiry</h2>
+                  <p className="text-slate-500 text-xs mt-0.5">Our front-desk team will contact you on your phone or WhatsApp shortly.</p>
+                </div>
+              </div>
 
-              <h3 className="text-2xl font-black text-[#12304b]">
-                Send an Online Diagnostic Enquiry
-              </h3>
-              <p className="mt-1 text-xs text-slate-500">
-                Fill out your details below and our clinic reception desk will respond promptly.
-              </p>
+              {errorMsg && (
+                <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl mb-6 flex gap-2.5 items-start text-xs font-semibold">
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>{errorMsg}</span>
+                </div>
+              )}
 
               {submitted ? (
-                <div className="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-6 text-center">
-                  <span className="text-3xl">🎉</span>
-                  <h4 className="mt-2 text-lg font-bold text-emerald-900">Enquiry Received!</h4>
-                  <p className="mt-1 text-xs text-emerald-700">
-                    Thank you! Our front desk staff will contact you shortly on <strong>{formData.phone}</strong>.
-                  </p>
+                <div className="text-center py-12 space-y-4 animate-in fade-in duration-300">
+                  <div className="w-16 h-16 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto border-2 border-emerald-100 shadow-sm">
+                    <CheckCircle className="h-8 w-8" />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Enquiry Logged Successfully!</h3>
+                    <p className="text-slate-500 text-xs max-w-md mx-auto leading-relaxed">
+                      Thank you, {formData.name}. We have received your query regarding <strong>{formData.service || 'Diagnostic Services'}</strong>. Our staff will call you back at <strong>{formData.phone}</strong>.
+                    </p>
+                  </div>
                   <button
-                    type="button"
                     onClick={() => {
                       setSubmitted(false);
-                      setFormData({ name: '', phone: '', email: '', service: 'General Diagnostic Enquiry', message: '' });
+                      setFormData({ name: '', phone: '', email: '', service: '', message: '' });
                     }}
-                    className="mt-4 rounded-full bg-emerald-600 px-5 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition"
+                    className="px-6 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-full transition"
                   >
                     Send Another Message
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                  {errorMsg && (
-                    <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800">
-                      {errorMsg}
-                    </div>
-                  )}
-
-                  <div className="grid gap-4 sm:grid-cols-2">
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Full Name */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Patient / Your Name *
+                      <label htmlFor="name" className="block text-xs font-bold text-slate-700 mb-1">
+                        Your Full Name <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="text"
+                        id="name"
                         required
-                        placeholder="e.g. Ramesh Kumar"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20"
+                        placeholder="e.g. Ramesh Kumar"
+                        className="w-full text-xs py-3 px-4 border border-slate-300 rounded-xl focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/20 bg-slate-50/50"
                       />
                     </div>
 
+                    {/* Contact Phone */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Phone Number *
+                      <label htmlFor="phone" className="block text-xs font-bold text-slate-700 mb-1">
+                        Contact Phone Number <span className="text-rose-500">*</span>
                       </label>
                       <input
                         type="tel"
+                        id="phone"
                         required
-                        placeholder="10-digit mobile number"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20"
+                        placeholder="e.g. 94400 09788"
+                        className="w-full text-xs py-3 px-4 border border-slate-300 rounded-xl focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/20 bg-slate-50/50"
                       />
                     </div>
                   </div>
 
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Email Address */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
-                        Email Address (Optional)
+                      <label htmlFor="email" className="block text-xs font-bold text-slate-700 mb-1">
+                        Email Address <span className="text-slate-400 font-normal">(Optional)</span>
                       </label>
                       <input
                         type="email"
-                        placeholder="e.g. name@email.com"
+                        id="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20"
+                        placeholder="e.g. ramesh@gmail.com"
+                        className="w-full text-xs py-3 px-4 border border-slate-300 rounded-xl focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/20 bg-slate-50/50"
                       />
                     </div>
 
+                    {/* Service */}
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1">
+                      <label htmlFor="service" className="block text-xs font-bold text-slate-700 mb-1">
                         Service of Interest
                       </label>
                       <select
+                        id="service"
                         value={formData.service}
                         onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20 bg-white"
+                        className="w-full text-xs py-3 px-4 border border-slate-300 rounded-xl focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/20 bg-white"
                       >
                         <option value="General Diagnostic Enquiry">General Diagnostic Enquiry</option>
-                        <option value="25% Off Preventive Health Checkup Packages">25% Off Preventive Health Checkup Packages</option>
-                        <option value="Whole Body Checkup (₹7,760)">Whole Body Checkup (₹7,760)</option>
-                        <option value="Master Health Checkup (₹4,720)">Master Health Checkup (₹4,720)</option>
-                        <option value="Ultrasound Scan (USG) & Doppler">Ultrasound Scan (USG) & Doppler</option>
-                        <option value="CT Scan">CT Scan</option>
-                        <option value="Digital X-Ray & Digital OPG">Digital X-Ray & Digital OPG</option>
-                        <option value="2D Echo & ECG">2D Echo & ECG</option>
-                        <option value="Home Sample Collection">Home Sample Collection in Toopran</option>
+                        <option value="Health Package Booking (25% OFF)">Health Package Booking (25% OFF)</option>
+                        <option value="Doorstep Home Sample Collection">Doorstep Home Sample Collection</option>
+                        <option value="4D Ultrasound / Color Doppler Scan">4D Ultrasound / Color Doppler Scan</option>
+                        <option value="Digital X-Ray / Digital OPG">Digital X-Ray / Digital OPG</option>
+                        <option value="Cardiology (2D Echo / ECG / TMT)">Cardiology (2D Echo / ECG / TMT)</option>
+                        <option value="Consultant Doctor Appointment">Consultant Doctor Appointment</option>
                       </select>
                     </div>
                   </div>
 
+                  {/* Message */}
                   <div>
-                    <label className="block text-xs font-bold text-slate-700 mb-1">
-                      Your Message / Inquiry Questions
+                    <label htmlFor="message" className="block text-xs font-bold text-slate-700 mb-1">
+                      Your Message or Questions <span className="text-rose-500">*</span>
                     </label>
                     <textarea
-                      rows={3}
-                      placeholder="Please ask about scan timings, fasting rules, or specific doctor consultations..."
+                      id="message"
+                      required
+                      rows={4}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-xs text-slate-800 focus:border-[#0a6cbe] focus:outline-none focus:ring-2 focus:ring-[#0a6cbe]/20"
+                      placeholder="e.g. Do you require fasting for lipid blood panels? What are the reporting timings?"
+                      className="w-full text-xs py-3 px-4 border border-slate-300 rounded-xl focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/20 bg-slate-50/50 resize-y"
                     />
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full rounded-full bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] py-3 text-xs font-bold text-white shadow-sm transition hover:shadow-md hover:scale-[1.01] disabled:opacity-50"
-                  >
-                    {loading ? 'Submitting Enquiry...' : 'Submit Diagnostic Enquiry'}
-                  </button>
+                  {/* Submit Action */}
+                  <div>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-[#0a6cbe] to-[#0ea5e9] hover:from-[#095ca1] hover:to-[#0284c7] text-white font-bold text-xs rounded-2xl transition shadow-md hover:scale-[1.01] disabled:opacity-50"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Sending enquiry...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4" />
+                          <span>Submit Diagnostic Enquiry</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </form>
               )}
             </div>
