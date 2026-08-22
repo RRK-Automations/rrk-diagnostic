@@ -1,33 +1,17 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary-50: #f0fdfa;
-  --color-primary-100: #ccfbf1;
-  --color-primary-500: #0d9488;
-  --color-primary-600: #0f766e;
-  --color-primary-700: #115e59;
-  --color-primary-800: #134e4a;
-  
-  --color-accent-500: #06b6d4;
-  --color-accent-600: #0891b2;
-  
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-/* Custom scrollbars */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+:root {
+  --bg: #ffffff;
+  --surface: #f4f8fc;
+  --surface-2: #eaf2f9;
+  --accent: #0a6cbe;
+  --accent-2: #0ea5e9;
+  --text: #12304b;
+  --muted: #52708a;
+  --primary-navy: #12304b;
+  --primary-blue: #0a6cbe;
+  --primary-cyan: #0ea5e9;
+  --primary-teal: #14b8a6;
 }
 
 html {
@@ -35,59 +19,219 @@ html {
 }
 
 body {
-  background-color: #f8fafc;
-  color: #334155;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Glassmorphism style utility classes */
-.glass-nav {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Manrope', 'Inter', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
-.glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+::selection {
+  background: rgba(10, 108, 190, 0.18);
+  color: #0a6cbe;
 }
 
-/* Animations */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(13, 148, 136, 0.4);
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#0ea5e9, #0a6cbe);
+  border-radius: 8px;
+}
+
+/* 3D Perspective & Layout */
+.persp {
+  perspective: 1400px;
+  perspective-origin: 50% 20%;
+}
+
+/* 3D Scroll Reveals - Content is visible immediately with gentle lift */
+.reveal3d {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.2, 0.65, 0.25, 1), transform 0.8s cubic-bezier(0.2, 0.65, 0.25, 1);
+}
+
+/* Interactive 3D Card Tilt with Specular Glare */
+.tilt {
+  transform-style: preserve-3d;
+  transition: transform 0.18s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+/* .tilt:hover {
+  box-shadow: 0 24px 60px -24px rgba(18, 48, 75, 0.35), 0 0 0 1px rgba(10, 108, 190, 0.25);
+} */
+
+.glare {
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(540px circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.85), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+.tilt:hover .glare {
+  opacity: 0;
+}
+
+.depth {
+  transform: translateZ(40px);
+}
+
+/* Floating Animations */
+@keyframes floaty {
+
+  0%,
+  100% {
+    transform: translateY(0);
   }
+
   50% {
-    box-shadow: 0 0 20px rgba(13, 148, 136, 0.8);
+    transform: translateY(-14px);
   }
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 2s infinite ease-in-out;
+.floaty {
+  animation: 6.5s ease-in-out infinite floaty;
 }
 
-/* Print CSS for Appointment Slips and Medical Reports */
-@media print {
-  body {
-    background-color: white !important;
-    color: black !important;
+.floaty-slow {
+  animation: 10.5s ease-in-out infinite floaty;
+}
+
+/* Rise Animation for Hero Elements */
+@keyframes rise {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  .no-print, nav, footer, .glass-nav, a[title="Contact clinic via WhatsApp"] {
-    display: none !important;
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
+}
+
+.rise {
+  animation: 0.85s cubic-bezier(0.2, 0.65, 0.25, 1) both rise;
+}
+
+/* Pulsing Glow */
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(10, 108, 190, 0.45);
   }
-  #printable-slip, .printable-report {
-    border: 1.5px solid #333 !important;
-    box-shadow: none !important;
-    margin: 0 auto !important;
-    padding: 24px !important;
-    max-width: 100% !important;
-    width: 100% !important;
-    background: white !important;
+
+  50% {
+    box-shadow: 0 0 0 14px rgba(10, 108, 190, 0);
   }
+}
+
+.pulse-glow {
+  animation: 2.4s ease-out infinite pulseGlow;
+}
+
+/* Shifting Text Gradient */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.grad-text {
+  background: linear-gradient(90deg, #0a6cbe, #0ea5e9, #14b8a6, #0a6cbe) 0 0 / 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: 8s linear infinite gradientShift;
+}
+
+/* Diagnostic Specialties Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: 32s linear infinite marquee;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Scroll Hint Indicator */
+@keyframes scrollHint {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  70% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+.scroll-hint {
+  animation: 1.8s ease-out infinite scrollHint;
+}
+
+/* Image Zoom on Card Hover */
+.zoom-img {
+  transition: transform 0.85s cubic-bezier(0.2, 0.65, 0.25, 1);
+}
+
+.tilt:hover .zoom-img {
+  transform: scale(1.08);
+}
+
+.nav-blur {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Top Scroll Progress Indicator */
+#scroll-progress {
+  transform-origin: 0%;
 }
