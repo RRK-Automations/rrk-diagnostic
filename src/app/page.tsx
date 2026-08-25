@@ -79,12 +79,12 @@ export default function HomePage() {
 
   const primaryPhone = content?.phones?.[0] || '94400 09788';
   const whatsappNum = content?.whatsappNumber || '919440009788';
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Asha Jyothi Diagnostic Centre, Behind Surya Medical, Main Road, Toopran, Telangana 502334')}`;
+  const mapUrl = 'https://www.google.com/maps/search/?api=1&query=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana';
 
   return (
     <div className="overflow-hidden bg-white">
       {/* 1. HERO SECTION WITH CLEAR VIDEO BACKGROUND & CMS DYNAMIC CONTENT */}
-      <section id="home" className="relative min-h-[92vh] flex items-center overflow-hidden bg-slate-950 pt-24 pb-16 text-white">
+      <section id="home" className="relative min-h-[92vh] flex items-center overflow-hidden bg-slate-50 pt-24 pb-16 text-white">
         {/* Crisp Background Video */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <video
@@ -93,7 +93,7 @@ export default function HomePage() {
             muted
             playsInline
             poster={content?.heroPosterUrl || '/images/hero-poster.jpg'}
-            className="h-full w-full object-cover scale-105 opacity-60"
+            className="h-full w-full object-cover scale-100 opacity-200"
           >
             <source src={content?.heroVideoUrl || '/videos/hero.mp4'} type="video/mp4" />
           </video>

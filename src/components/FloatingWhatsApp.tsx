@@ -1,9 +1,17 @@
 'use client';
 
 import React from 'react';
+import { usePathname } from 'next/navigation';
 import { centreInfo } from '@/config/centreInfo';
 
 export default function FloatingWhatsApp() {
+  const pathname = usePathname();
+
+  // Hide Floating WhatsApp on Admin Dashboard & Login pages
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
+
   const whatsappUrl = `https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`;
 
   return (

@@ -2,11 +2,18 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useCmsContent } from '@/hooks/useCmsContent';
 
 export default function Footer() {
+  const pathname = usePathname();
   const { content } = useCmsContent();
   const currentYear = new Date().getFullYear();
+
+  // Hide Footer completely on Admin Dashboard & Login pages
+  if (pathname?.startsWith('/admin')) {
+    return null;
+  }
 
   const directorName = content?.directorName || 'P. Mallesh Goud';
   const directorDesig = content?.directorDesignation || 'Director';

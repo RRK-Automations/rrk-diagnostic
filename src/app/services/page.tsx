@@ -32,7 +32,7 @@ export default function ServicesPage() {
       <section className="mx-auto max-w-6xl px-5 mt-14">
         <div className="persp grid gap-8 md:grid-cols-2">
           {divisionsList.map((service: any, idx: number) => (
-            <div key={service.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.06}s` }}>
+            <div key={service.id || idx} className="reveal3d" style={{ transitionDelay: `${idx * 0.10}s` }}>
               <div className="tilt group relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_16px_40px_-28px_rgba(18,48,75,0.25)] hover:border-[#0a6cbe]/50 transition">
                 <div className="glare" />
 

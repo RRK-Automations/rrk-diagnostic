@@ -38,7 +38,7 @@ export default function ContactPage() {
   const hours = content?.operatingHours || '7:00 AM – 9:00 PM (All 7 Days)';
   const emergency = content?.emergencySupport || '24/7 Emergency Support';
   const whatsappNum = content?.whatsappNumber || '919440009788';
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Asha Jyothi Diagnostic Centre, Behind Surya Medical, Main Road, Toopran, Telangana 502334')}`;
+  const mapUrl = 'https://www.google.com/maps/search/?api=1&query=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -219,7 +219,7 @@ export default function ContactPage() {
               <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-slate-100">
                 <iframe
                   title="Asha Jyothi Diagnostic Centre Location Map"
-                  src="https://maps.google.com/maps?q=Behind+Surya+Medical+Main+Road+Toopran+Telangana+502334&t=&z=16&ie=UTF8&iwloc=&output=embed"
+                  src="https://maps.google.com/maps?q=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   className="h-full w-full border-0"
                   loading="lazy"
                   allowFullScreen

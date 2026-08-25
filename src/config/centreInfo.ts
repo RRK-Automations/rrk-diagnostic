@@ -56,7 +56,7 @@ export const centreInfo: CentreInfo = {
   city: "Toopran",
   district: "Medak",
   state: "Telangana",
-  mapUrl: "https://maps.google.com/?q=Asha+Jyothi+Diagnostic+Centre+Toopran",
+  mapUrl: "https://www.google.com/maps/search/?api=1&query=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana",
   contact: {
     director: "P. Mallesh Goud",
     phones: ["+91 94400 09788", "+91 94402 82688"],
