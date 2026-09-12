@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { searchReports } from '@/services/reportApi';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 function ReportsContent() {
   const searchParams = useSearchParams();
@@ -205,7 +206,7 @@ function ReportsContent() {
                 <span>Print / Download PDF</span>
               </button>
               <a
-                href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hello Asha Jyothi Diagnostics, I have a medical query regarding my report (${selectedReport.testName} - Ref: ${selectedReport.reportCode}).`)}`}
+                href={getWhatsAppUrl(whatsappNum, `Hello Asha Jyothi Diagnostics, I have a medical query regarding my report (${selectedReport.testName} - Ref: ${selectedReport.reportCode}).`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-4 py-2.5 bg-[#25D366] hover:bg-[#1fbd5a] text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5"

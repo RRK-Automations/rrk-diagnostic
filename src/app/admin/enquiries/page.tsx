@@ -14,6 +14,7 @@ import {
   MessageCircle
 } from 'lucide-react';
 import { getEnquiries, updateEnquiryStatus } from '@/services/enquiryApi';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function EnquiriesManager() {
   const [enquiries, setEnquiries] = useState<any[]>([]);
@@ -300,7 +301,7 @@ export default function EnquiriesManager() {
             <div className="border-t border-slate-100 pt-5 flex items-center justify-between text-xs font-semibold">
               <span className="text-slate-400">Direct Actions:</span>
               <a
-                href={`https://wa.me/${selectedEnq.phone.replace(/[^0-9]/g, '')}?text=Hello ${selectedEnq.name}, this is Asha Jyothi Diagnostic Centre Toopran. We are responding to your general enquiry.`}
+                href={getWhatsAppUrl(selectedEnq.phone, `Hello ${selectedEnq.name}, this is Asha Jyothi Diagnostic Centre Toopran. We are responding to your general enquiry.`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-emerald-600 hover:text-emerald-750 inline-flex items-center gap-1 hover:underline"

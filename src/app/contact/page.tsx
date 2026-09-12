@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 import { 
   MapPin, 
   Phone, 
@@ -204,7 +205,7 @@ export default function ContactPage() {
                 </a>
 
                 <a
-                  href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(content?.whatsappPrefilledMessage || 'Hi Asha Jyothi Diagnostics, I would like to enquire about diagnostic scan pricing.')}`}
+                  href={getWhatsAppUrl(whatsappNum, content?.whatsappPrefilledMessage || 'Hi Asha Jyothi Diagnostics, I would like to enquire about diagnostic scan pricing.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#25D366] hover:bg-[#1fbd5a] text-white font-bold text-xs rounded-2xl transition shadow-md"

@@ -3,22 +3,24 @@
 import React from 'react';
 import { MessageSquare } from 'lucide-react';
 import { centreInfo } from '@/config/centreInfo';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 interface WhatsAppButtonProps {
   message?: string;
   variant?: 'floating' | 'button' | 'link';
   className?: string;
   label?: string;
+  phone?: string;
 }
 
 export default function WhatsAppButton({
   message = centreInfo.whatsapp.prefilledText.enquiry,
   variant = 'floating',
   className = '',
-  label = 'Chat on WhatsApp'
+  label = 'Chat on WhatsApp',
+  phone
 }: WhatsAppButtonProps) {
-  const encodedText = encodeURIComponent(message);
-  const waUrl = `https://wa.me/${centreInfo.whatsapp.number}?text=${encodedText}`;
+  const waUrl = getWhatsAppUrl(phone || centreInfo.whatsapp.number, message);
 
   if (variant === 'floating') {
     return (

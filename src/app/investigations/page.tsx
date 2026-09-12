@@ -22,6 +22,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 interface SimpleTestItem {
   name: string;
@@ -354,7 +355,7 @@ export default function InvestigationsPage() {
                 {/* Bottom Action Button */}
                 <div className="mt-7 pt-4 border-t border-slate-100 flex items-center gap-2">
                   <a
-                    href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(categoryWhatsappMsg)}`}
+                    href={getWhatsAppUrl(whatsappNum, categoryWhatsappMsg)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2.5 text-xs font-bold text-white shadow-xs transition"
@@ -409,7 +410,7 @@ export default function InvestigationsPage() {
               Book Home Collection
             </Link>
             <a
-              href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('Hi Asha Jyothi Diagnostics, I want to book doorstep sample collection in Toopran.')}`}
+              href={getWhatsAppUrl(whatsappNum, 'Hi Asha Jyothi Diagnostics, I want to book doorstep sample collection in Toopran.')}
               target="_blank"
               rel="noopener noreferrer"
               className="rounded-full border border-slate-300 bg-white px-7 py-3 text-xs font-bold text-slate-700 hover:bg-slate-50 transition"

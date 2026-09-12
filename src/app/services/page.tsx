@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function ServicesPage() {
   const { content } = useCmsContent();
@@ -90,7 +91,7 @@ export default function ServicesPage() {
                       Book Diagnostic Test
                     </Link>
                     <a
-                      href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi Asha Jyothi, I would like to enquire about ${service.title}.`)}`}
+                      href={getWhatsAppUrl(whatsappNum, `Hi Asha Jyothi, I would like to enquire about ${service.title}.`)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1.5 rounded-full bg-[#25D366] px-4 py-3 text-xs font-bold text-white hover:bg-[#1fbd5a] transition"

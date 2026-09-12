@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { getAppointments, updateAppointmentStatus } from '@/services/appointmentApi';
 import { centreInfo } from '@/config/centreInfo';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function AppointmentsManager() {
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -347,7 +348,7 @@ export default function AppointmentsManager() {
             <div className="border-t border-slate-100 pt-5 flex items-center justify-between text-xs font-semibold">
               <span className="text-slate-400">Trigger Alert:</span>
               <a
-                href={`https://wa.me/${selectedAppt.phone.replace(/[^0-9]/g, '')}?text=Hello ${selectedAppt.patientName}, this is Asha Jyothi Diagnostic Centre Toopran. We are reaching out regarding your ${selectedAppt.service} request.`}
+                href={getWhatsAppUrl(selectedAppt.phone, `Hello ${selectedAppt.patientName}, this is Asha Jyothi Diagnostic Centre Toopran. We are reaching out regarding your ${selectedAppt.service} request.`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-emerald-600 hover:text-emerald-750 inline-flex items-center gap-1 hover:underline"

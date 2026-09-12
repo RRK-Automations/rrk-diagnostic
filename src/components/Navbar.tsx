@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { centreInfo } from '@/config/centreInfo';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 import { Phone, Calendar, MessageCircle, Menu, X } from 'lucide-react';
 
 export default function Navbar() {
@@ -94,7 +95,7 @@ export default function Navbar() {
           </Link>
 
           <a
-            href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`}
+            href={getWhatsAppUrl(centreInfo.whatsapp.number, centreInfo.whatsapp.prefilledText.enquiry)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-9 w-9 items-center justify-center rounded-full bg-[#25D366] text-white shadow-sm transition hover:bg-[#1fbd5a] hover:scale-105 shrink-0"
@@ -161,7 +162,7 @@ export default function Navbar() {
                 <span>Book a Test</span>
               </Link>
               <a
-                href={`https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`}
+                href={getWhatsAppUrl(centreInfo.whatsapp.number, centreInfo.whatsapp.prefilledText.enquiry)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-1.5 rounded-full bg-[#25D366] py-2.5 text-xs font-bold text-white shadow-sm"

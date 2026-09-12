@@ -21,6 +21,7 @@ import {
 import { centreInfo } from '@/config/centreInfo';
 import { healthPackages } from '@/config/packages';
 import { createAppointment } from '@/services/appointmentApi';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 function BookingFormContent() {
   const searchParams = useSearchParams();
@@ -363,7 +364,7 @@ function BookingFormContent() {
             </button>
 
             <a
-              href={`https://wa.me/${centreInfo.whatsapp.number}?text=Hello Asha Jyothi Diagnostics, I have logged an appointment request (Ref: ${successData.id}) for ${successData.submittedData.service} on ${successData.submittedData.preferredDate}. Please confirm my slot.`}
+              href={getWhatsAppUrl(centreInfo.whatsapp.number, `Hello Asha Jyothi Diagnostics, I have logged an appointment request (Ref: ${successData.id}) for ${successData.submittedData.service} on ${successData.submittedData.preferredDate}. Please confirm my slot.`)}
               target="_blank"
               rel="noopener noreferrer"
               className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-lg shadow transition-colors flex items-center justify-center gap-1.5"

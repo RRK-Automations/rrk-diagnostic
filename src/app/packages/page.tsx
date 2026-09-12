@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function PackagesPage() {
   const { content } = useCmsContent();
@@ -122,7 +123,7 @@ export default function PackagesPage() {
                     Book Home Collection
                   </Link>
                   <a
-                    href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi Asha Jyothi Diagnostics, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}`}
+                    href={getWhatsAppUrl(whatsappNum, `Hi Asha Jyothi Diagnostics, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="rounded-full bg-[#25D366] p-3 text-white hover:bg-[#1fbd5a] transition"

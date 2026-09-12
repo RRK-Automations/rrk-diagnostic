@@ -3,16 +3,21 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { centreInfo } from '@/config/centreInfo';
+import { useCmsContent } from '@/hooks/useCmsContent';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function FloatingWhatsApp() {
   const pathname = usePathname();
+  const { content } = useCmsContent();
 
   // Hide Floating WhatsApp on Admin Dashboard & Login pages
   if (pathname?.startsWith('/admin')) {
     return null;
   }
 
-  const whatsappUrl = `https://wa.me/${centreInfo.whatsapp.number}?text=${encodeURIComponent(centreInfo.whatsapp.prefilledText.enquiry)}`;
+  const phoneNum = content?.whatsappNumber || centreInfo?.whatsapp?.number || '919440009788';
+  const prefilled = content?.whatsappPrefilledMessage || centreInfo?.whatsapp?.prefilledText?.enquiry;
+  const whatsappUrl = getWhatsAppUrl(phoneNum, prefilled);
 
   return (
     <a

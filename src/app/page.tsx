@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useCmsContent } from '@/hooks/useCmsContent';
 import { createAppointment } from '@/services/appointmentApi';
+import { getWhatsAppUrl } from '@/utils/whatsapp';
 
 export default function HomePage() {
   const { content } = useCmsContent();
@@ -318,7 +319,7 @@ export default function HomePage() {
 
               <div className="mt-8 flex flex-wrap gap-4">
                 <a
-                  href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent('Hi Asha Jyothi Diagnostics, I would like to book a Home Sample Collection in Toopran.')}`}
+                  href={getWhatsAppUrl(whatsappNum, 'Hi Asha Jyothi Diagnostics, I would like to book a Home Sample Collection in Toopran.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-6 py-3 text-xs font-bold text-white shadow-md hover:bg-[#1fbd5a] transition hover:scale-105"
@@ -586,7 +587,7 @@ export default function HomePage() {
                       Book Home Collection
                     </Link>
                     <a
-                      href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(`Hi, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}`}
+                      href={getWhatsAppUrl(whatsappNum, `Hi, I would like to book the ${pkg.name} (Offer Price: ₹${pkg.price}).`)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="rounded-full bg-[#25D366] p-2.5 text-white hover:bg-[#1fbd5a] transition"
@@ -863,7 +864,7 @@ export default function HomePage() {
 
                 <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                   <a
-                    href={`https://wa.me/${whatsappNum}?text=${encodeURIComponent(content?.whatsappPrefilledMessage || 'Hi Asha Jyothi, I would like to book a test.')}`}
+                    href={getWhatsAppUrl(whatsappNum, content?.whatsappPrefilledMessage || 'Hi Asha Jyothi, I would like to book a test.')}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2.5 rounded-full bg-[#25D366] px-8 py-4 text-sm font-bold text-white transition hover:bg-[#1fbd5a] hover:shadow-[0_12px_44px_-10px_rgba(37,211,102,0.7)] hover:scale-105"
