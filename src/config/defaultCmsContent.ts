@@ -133,6 +133,73 @@ export const defaultConsultants = [
   }
 ];
 
+export const defaultGalleryImages = [
+  {
+    id: 'gal-1',
+    title: 'Automated Biochemistry & Pathology Lab',
+    category: 'Pathology Lab',
+    image: '/images/lab-analyzers.jpg',
+    description: 'Fully automated multi-channel clinical biochemistry and hematology analyzers with barcoded specimen tracking.',
+    featured: true
+  },
+  {
+    id: 'gal-2',
+    title: 'High-Resolution 4D Ultrasound Suite',
+    category: '4D Ultrasound',
+    image: '/images/ultrasound-4d.jpg',
+    description: 'Advanced real-time 4D Sonography and vascular Color Doppler imaging workstation for obstetrics, abdominal, and soft tissue scans.',
+    featured: true
+  },
+  {
+    id: 'gal-3',
+    title: 'Digital Radiography & Panoramic OPG',
+    category: 'Digital X-Ray & OPG',
+    image: '/images/digital-xray-suite.jpg',
+    description: 'Low-radiation high-frequency digital X-Ray unit and specialized full-mouth panoramic dental OPG imaging system.',
+    featured: true
+  },
+  {
+    id: 'gal-4',
+    title: 'Cardiac Diagnostics & 2D Echocardiography',
+    category: 'Cardiology',
+    image: '/images/ecg.jpg',
+    description: 'Dedicated non-invasive cardiac evaluation room equipped with 12-lead digital ECG and color flow 2D Echo.',
+    featured: true
+  },
+  {
+    id: 'gal-5',
+    title: 'Chemiluminescence Hormone Analyzer',
+    category: 'Pathology Lab',
+    image: '/images/thyroid.jpg',
+    description: 'Ultra-sensitive chemiluminescence immunoassays for thyroid profiles, fertility hormones, and Vitamin D3/B12.',
+    featured: false
+  },
+  {
+    id: 'gal-6',
+    title: 'Asha Jyothi Diagnostic Centre Infrastructure',
+    category: 'Centre Facility',
+    image: '/images/hero-poster.jpg',
+    description: 'Established 1992 in Toopran, featuring comfortable patient waiting bays, hygienic phlebotomy stations, and 24/7 emergency readiness.',
+    featured: true
+  },
+  {
+    id: 'gal-7',
+    title: 'Clinical Microscopy & Urine Chemistry Desk',
+    category: 'Pathology Lab',
+    image: '/images/urine.jpg',
+    description: 'High-power optical microscopy workstation for urinary sediment analysis, stool examination, and bodily fluid cytology.',
+    featured: false
+  },
+  {
+    id: 'gal-8',
+    title: 'Acute Fever & Infectious Serology Station',
+    category: 'Pathology Lab',
+    image: '/images/fever.jpg',
+    description: 'Rapid diagnostic bench for Dengue NS1/IgM, Malaria Antigen Pf/Pv, Typhoid Widal, and viral markers.',
+    featured: false
+  }
+];
+
 export function getDefaultSiteContent() {
   return {
     centreName: centreInfo.name,
@@ -183,6 +250,8 @@ export function getDefaultSiteContent() {
       description: s.description
     })),
 
-    consultants: defaultConsultants
+    consultants: defaultConsultants,
+
+    galleryImages: defaultGalleryImages
   };
 }

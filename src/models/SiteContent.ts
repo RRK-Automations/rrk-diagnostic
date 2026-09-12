@@ -73,6 +73,16 @@ export interface ISiteContent extends Document {
     availableDays?: string;
   }>;
 
+  // Diagnostic & Facility Gallery Images
+  galleryImages: Array<{
+    id: string;
+    title: string;
+    category: string;
+    image: string;
+    description?: string;
+    featured?: boolean;
+  }>;
+
   updatedAt: Date;
 }
 
@@ -162,6 +172,17 @@ const SiteContentSchema = new Schema<ISiteContent>(
         experience: { type: String, default: '' },
         timing: { type: String, default: 'By Prior Appointment' },
         availableDays: { type: String, default: 'Monday – Saturday' }
+      }
+    ],
+
+    galleryImages: [
+      {
+        id: { type: String, required: true },
+        title: { type: String, required: true },
+        category: { type: String, required: true },
+        image: { type: String, required: true },
+        description: { type: String, default: '' },
+        featured: { type: Boolean, default: false }
       }
     ]
   },

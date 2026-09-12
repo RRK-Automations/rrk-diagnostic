@@ -18,15 +18,20 @@ import {
   Loader2,
   Phone,
   Clock,
-  Sparkles
+  Sparkles,
+  Image as ImageIcon,
+  Upload,
+  UploadCloud
 } from 'lucide-react';
 
 export default function AdminCmsPage() {
-  const [activeTab, setActiveTab] = useState<'centre' | 'packages' | 'services' | 'doctors' | 'hero'>('centre');
+  const [activeTab, setActiveTab] = useState<'centre' | 'packages' | 'services' | 'doctors' | 'hero' | 'gallery'>('centre');
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [resetting, setResetting] = useState(false);
+  const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
+  const [uploadingNew, setUploadingNew] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [showResetModal, setShowResetModal] = useState(false);
@@ -232,6 +237,88 @@ export default function AdminCmsPage() {
     setData({ ...data, divisions: updated });
   };
 
+  // Gallery Modifiers & File Upload
+  const handleUploadImageFile = async (file: File, targetIndex?: number) => {
+    if (!file) return;
+    setErrorMsg('');
+    setSuccessMsg('');
+
+    if (targetIndex !== undefined) {
+      setUploadingIdx(targetIndex);
+    } else {
+      setUploadingNew(true);
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const json = await res.json();
+
+      if (json.success && json.url) {
+        if (targetIndex !== undefined) {
+          const updated = [...(data.galleryImages || [])];
+          updated[targetIndex] = { ...updated[targetIndex], image: json.url };
+          setData({ ...data, galleryImages: updated });
+          setSuccessMsg(`Image replaced successfully! (Saved as ${json.filename})`);
+        } else {
+          // Add as new gallery item
+          const cleanTitle = file.name
+            .replace(/\.[^/.]+$/, '')
+            .replace(/[-_]/g, ' ')
+            .replace(/\b\w/g, (c) => c.toUpperCase());
+          const newItem = {
+            id: `gal-${Date.now()}`,
+            title: cleanTitle || 'Diagnostic Facility Equipment',
+            category: 'Centre Facility',
+            image: json.url,
+            description: 'Advanced diagnostic equipment at Asha Jyothi Diagnostic Centre, Toopran.',
+            featured: false
+          };
+          setData({ ...data, galleryImages: [newItem, ...(data.galleryImages || [])] });
+          setSuccessMsg(`Diagnostic photo uploaded and added to gallery! Remember to click "Save & Publish Live".`);
+        }
+        setTimeout(() => setSuccessMsg(''), 6000);
+      } else {
+        setErrorMsg(json.error || 'Failed to upload image file');
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Network error uploading image file');
+    } finally {
+      setUploadingIdx(null);
+      setUploadingNew(false);
+    }
+  };
+
+  const handleGalleryChange = (index: number, field: string, value: any) => {
+    const updated = [...(data.galleryImages || [])];
+    updated[index] = { ...updated[index], [field]: value };
+    setData({ ...data, galleryImages: updated });
+  };
+
+  const handleAddGalleryItem = () => {
+    const newItem = {
+      id: `gal-${Date.now()}`,
+      title: 'New Diagnostic Equipment / Suite',
+      category: 'Pathology Lab',
+      image: '/images/pathology.jpg',
+      description: 'High-precision automated diagnostic analyzer at Asha Jyothi Diagnostics.',
+      featured: false
+    };
+    setData({ ...data, galleryImages: [...(data.galleryImages || []), newItem] });
+  };
+
+  const handleRemoveGalleryItem = (index: number) => {
+    if (!confirm('Are you sure you want to remove this image from the facility gallery?')) return;
+    const updated = data.galleryImages.filter((_: any, i: number) => i !== index);
+    setData({ ...data, galleryImages: updated });
+  };
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-500 gap-3">
@@ -371,6 +458,19 @@ export default function AdminCmsPage() {
         >
           <Megaphone className="h-4 w-4" />
           <span>5. Hero & Announcements</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('gallery')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            activeTab === 'gallery'
+              ? 'bg-[#0a6cbe] text-white shadow-md'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+          }`}
+        >
+          <ImageIcon className="h-4 w-4" />
+          <span>6. Diagnostic Gallery ({data?.galleryImages?.length || 0})</span>
         </button>
       </div>
 
@@ -988,6 +1088,203 @@ export default function AdminCmsPage() {
                   />
                 </div>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 6: DIAGNOSTIC FACILITY & EQUIPMENT GALLERY */}
+        {activeTab === 'gallery' && (
+          <div className="space-y-6">
+            
+            {/* Top Info & Upload Action Card */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="p-1.5 bg-[#0a6cbe]/10 text-[#0a6cbe] rounded-lg">
+                      <ImageIcon className="h-4 w-4" />
+                    </span>
+                    <h2 className="text-lg font-black text-slate-900">Diagnostic Infrastructure & Facility Gallery</h2>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-1">
+                    Upload photos of diagnostic analyzers, 4D ultrasound suites, digital X-Ray, OPG dental, and clinical reception. Displayed live on the <Link href="/about" target="_blank" className="text-[#0a6cbe] font-bold underline">About Page</Link>.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleAddGalleryItem}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition shadow-sm"
+                  >
+                    <Plus className="h-3.5 w-3.5" />
+                    <span>Add by URL</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Direct File Upload Drop Zone */}
+              <div className="relative rounded-2xl border-2 border-dashed border-sky-300 bg-sky-50/60 p-6 sm:p-8 text-center transition hover:border-[#0a6cbe] hover:bg-sky-50">
+                <input
+                  type="file"
+                  id="gallery-file-upload-input"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      handleUploadImageFile(file);
+                      e.target.value = '';
+                    }
+                  }}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={uploadingNew}
+                />
+                <div className="flex flex-col items-center justify-center pointer-events-none">
+                  {uploadingNew ? (
+                    <div className="flex flex-col items-center gap-2 text-[#0a6cbe]">
+                      <Loader2 className="h-8 w-8 animate-spin" />
+                      <p className="text-xs font-bold">Uploading & saving clinical image...</p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="w-12 h-12 rounded-2xl bg-white shadow-md text-[#0a6cbe] flex items-center justify-center mb-3">
+                        <UploadCloud className="h-6 w-6" />
+                      </div>
+                      <h4 className="text-sm font-black text-slate-800">
+                        Click or Drag & Drop to Upload Diagnostic Photo
+                      </h4>
+                      <p className="text-xs text-slate-500 mt-1 max-w-md">
+                        Supports JPG, PNG, and WebP up to 15MB. Automatically saved to high-performance local server storage.
+                      </p>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Gallery Grid List */}
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {(data.galleryImages || []).map((item: any, idx: number) => (
+                <div 
+                  key={item.id || idx} 
+                  className="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between transition hover:shadow-md hover:border-[#0a6cbe]/30"
+                >
+                  {/* Image Thumbnail & Replace Trigger */}
+                  <div className="relative aspect-video w-full bg-slate-100 overflow-hidden group">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.image || '/images/pathology.jpg'}
+                      alt={item.title || 'Diagnostic Facility'}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                      onError={(e: any) => {
+                        e.currentTarget.src = '/images/pathology.jpg';
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center gap-2 p-3">
+                      <label className="cursor-pointer inline-flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-1.5 text-[11px] font-bold text-slate-800 shadow hover:bg-white transition">
+                        <Upload className="h-3 w-3 text-[#0a6cbe]" />
+                        <span>{uploadingIdx === idx ? 'Uploading...' : 'Replace Photo'}</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              handleUploadImageFile(file, idx);
+                              e.target.value = '';
+                            }
+                          }}
+                          disabled={uploadingIdx === idx}
+                        />
+                      </label>
+                    </div>
+
+                    <span className="absolute top-3 left-3 rounded-full bg-black/60 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                      {item.category || 'Facility'}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveGalleryItem(idx)}
+                      className="absolute top-3 right-3 p-1.5 rounded-full bg-rose-600/90 text-white hover:bg-rose-700 shadow-sm transition"
+                      title="Remove image"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Edit Fields */}
+                  <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Image Title / Equipment Name</label>
+                        <input
+                          type="text"
+                          value={item.title || ''}
+                          onChange={(e) => handleGalleryChange(idx, 'title', e.target.value)}
+                          placeholder="e.g. Automated Biochemistry Analyzer"
+                          className="w-full rounded-xl border border-slate-300 px-3 py-1.5 text-xs text-slate-900 font-bold focus:border-[#0a6cbe]"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Category</label>
+                          <select
+                            value={item.category || 'Pathology Lab'}
+                            onChange={(e) => handleGalleryChange(idx, 'category', e.target.value)}
+                            className="w-full rounded-xl border border-slate-300 px-2.5 py-1.5 text-xs text-slate-800 bg-white"
+                          >
+                            <option value="Pathology Lab">Pathology Lab</option>
+                            <option value="4D Ultrasound">4D Ultrasound</option>
+                            <option value="Digital X-Ray & OPG">Digital X-Ray & OPG</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Centre Facility">Centre Facility</option>
+                            <option value="CT Scan Suite">CT Scan Suite</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Showcase Badge</label>
+                          <label className="flex items-center gap-1.5 h-8 px-2 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer text-[11px] font-semibold text-slate-700">
+                            <input
+                              type="checkbox"
+                              checked={Boolean(item.featured)}
+                              onChange={(e) => handleGalleryChange(idx, 'featured', e.target.checked)}
+                              className="rounded text-[#0a6cbe]"
+                            />
+                            <span>Featured</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Image URL / Path</label>
+                        <input
+                          type="text"
+                          value={item.image || ''}
+                          onChange={(e) => handleGalleryChange(idx, 'image', e.target.value)}
+                          placeholder="/uploads/gallery/... or /images/..."
+                          className="w-full rounded-xl border border-slate-300 px-3 py-1.5 text-[11px] font-mono text-slate-700"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-600 mb-0.5">Description / Specifications</label>
+                        <textarea
+                          rows={2}
+                          value={item.description || ''}
+                          onChange={(e) => handleGalleryChange(idx, 'description', e.target.value)}
+                          placeholder="Brief technical description or patient benefits..."
+                          className="w-full rounded-xl border border-slate-300 px-3 py-1.5 text-xs text-slate-700"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
