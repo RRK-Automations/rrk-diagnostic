@@ -237,6 +237,64 @@ export default function AdminCmsPage() {
     setData({ ...data, divisions: updated });
   };
 
+  // Client-side image compression for Vercel & mobile efficiency
+  const compressImageFile = async (file: File): Promise<File> => {
+    if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
+      return file;
+    }
+
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX_WIDTH = 1400;
+          const MAX_HEIGHT = 1050;
+          let { width, height } = img;
+
+          if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+            if (width / height > MAX_WIDTH / MAX_HEIGHT) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            } else {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            resolve(file);
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+          canvas.toBlob(
+            (blob) => {
+              if (!blob || blob.size >= file.size) {
+                resolve(file);
+              } else {
+                const compressed = new File([blob], file.name.replace(/\.[^/.]+$/, '.webp'), {
+                  type: 'image/webp'
+                });
+                resolve(compressed);
+              }
+            },
+            'image/webp',
+            0.82
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  };
+
   // Gallery Modifiers & File Upload
   const handleUploadImageFile = async (file: File, targetIndex?: number) => {
     if (!file) return;
@@ -250,8 +308,11 @@ export default function AdminCmsPage() {
     }
 
     try {
+      // Compress image client-side to keep size under 250KB for fast Vercel serverless processing
+      const optimizedFile = await compressImageFile(file);
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', optimizedFile);
 
       const res = await fetch('/api/admin/upload', {
         method: 'POST',
