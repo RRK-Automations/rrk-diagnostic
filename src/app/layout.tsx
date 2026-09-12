@@ -6,9 +6,71 @@ import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import ThreeDProvider from '@/components/ThreeDProvider';
 
 export const metadata: Metadata = {
-  title: 'Asha Jyothi Diagnostics — Precision Diagnostics, Compassionate Care · 33+ Years of Excellence',
-  description: 'Asha Jyothi Diagnostic Centre in Toopran, Medak. 33+ years of diagnostic trust (Estd. 1992). Complete pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, 2D Echo, 25% discount on health checkup packages and same-day reports.',
-  keywords: 'Asha Jyothi Diagnostics, diagnostic centre Toopran, blood tests Toopran, ultrasound Toopran, CT scan Medak, digital X-ray Toopran, P. Mallesh Goud, health packages Toopran, pathology lab Toopran'
+  metadataBase: new URL('https://ashajyothidctoopran.com'),
+  title: {
+    default: 'Asha Jyothi Diagnostics — Precision Diagnostics, Compassionate Care · 33+ Years of Excellence',
+    template: '%s | Asha Jyothi Diagnostic Centre, Toopran'
+  },
+  description: 'Asha Jyothi Diagnostic Centre in Toopran, Medak. 33+ years of clinical diagnostic trust (Estd. 1992). Director P. Mallesh Goud. Fully automated pathology laboratory, 4D ultrasound, CT scan, digital X-Ray & OPG, cardiac 2D Echo, 25% discount on health checkup packages and same-day reports.',
+  keywords: [
+    'Asha Jyothi Diagnostics',
+    'Asha Jyothi Diagnostic Centre Toopran',
+    'diagnostic centre Toopran',
+    'blood test Toopran',
+    'pathology lab Toopran',
+    '4D ultrasound Toopran',
+    'CT scan Medak',
+    'digital X-ray Toopran',
+    'dental OPG Toopran',
+    '2D Echo Cardiology Toopran',
+    'P. Mallesh Goud',
+    'health checkup packages Toopran',
+    'home sample collection Toopran'
+  ],
+  authors: [{ name: 'Asha Jyothi Diagnostic Centre', url: 'https://ashajyothidctoopran.com' }],
+  creator: 'Asha Jyothi Diagnostic Centre',
+  publisher: 'Asha Jyothi Diagnostic Centre',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Asha Jyothi Diagnostics — Premier Diagnostic Centre in Toopran',
+    description: '33+ years of clinical precision in Toopran, Medak. Automated laboratory, 4D ultrasound, CT scan, digital X-Ray & OPG, 2D Echo, and flat 25% off health checkups.',
+    url: 'https://ashajyothidctoopran.com',
+    siteName: 'Asha Jyothi Diagnostic Centre',
+    images: [
+      {
+        url: '/images/hero-poster.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Asha Jyothi Diagnostic Centre Toopran',
+      },
+    ],
+    locale: 'en_IN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Asha Jyothi Diagnostic Centre — Toopran',
+    description: 'Hospital-grade diagnostic laboratory and imaging center in Toopran, Medak district.',
+    images: ['/images/hero-poster.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({

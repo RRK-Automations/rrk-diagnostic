@@ -33,9 +33,14 @@ export default function Footer() {
         {/* Column 1: Brand & Excellence */}
         <div>
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-[#0a6cbe] to-[#0ea5e9] text-sm font-black text-white">
-              AJ
-            </span>
+            <div className="relative h-10 w-10 overflow-hidden rounded-full bg-white p-0.5 shadow-xs border border-slate-200 shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt="Asha Jyothi Diagnostic Centre Logo"
+                className="h-full w-full object-contain rounded-full"
+              />
+            </div>
             <span className="font-extrabold text-[#12304b] text-base">
               {content?.centreName || 'Asha Jyothi Diagnostics'}
             </span>
@@ -65,6 +70,11 @@ export default function Footer() {
             </li>
             <li>
               <Link href="/services" className="transition hover:text-[#0a6cbe]">Diagnostic Services</Link>
+            </li>
+            <li>
+              <Link href="/investigations" className="transition hover:text-[#0a6cbe] font-bold text-[#0a6cbe]">
+                Investigations Catalog (60+)
+              </Link>
             </li>
             <li>
               <Link href="/packages" className="transition hover:text-[#0a6cbe] font-semibold text-[#0a6cbe]">
