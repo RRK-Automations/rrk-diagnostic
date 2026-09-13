@@ -215,15 +215,6 @@ export default function AboutPage() {
               );
             })}
           </div>
-
-          <Link
-            href="/admin/cms"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-sky-200 bg-sky-50 px-4 py-2 text-xs font-bold text-[#0a6cbe] hover:bg-sky-100 transition shadow-sm self-start sm:self-auto"
-            title="Upload new diagnostic photos in Staff CMS"
-          >
-            <Camera className="h-3.5 w-3.5" />
-            <span>Staff: Upload Photos</span>
-          </Link>
         </div>
 
         {/* Gallery Image Grid */}
@@ -287,13 +278,7 @@ export default function AboutPage() {
           <div className="rounded-3xl border border-slate-200 bg-[#f4f8fc] p-12 text-center text-slate-500">
             <Camera className="h-10 w-10 text-slate-400 mx-auto mb-3" />
             <h4 className="text-base font-bold text-slate-800">No images in this category yet</h4>
-            <p className="text-xs text-slate-500 mt-1">Staff can upload facility photos via the Website Content Manager.</p>
-            <Link
-              href="/admin/cms"
-              className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-[#0a6cbe] px-4 py-2 text-xs font-bold text-white shadow-sm"
-            >
-              <Upload className="h-3.5 w-3.5" /> Upload Photos
-            </Link>
+            <p className="text-xs text-slate-500 mt-1">Please check back soon for updated clinical facility photos.</p>
           </div>
         )}
       </section>

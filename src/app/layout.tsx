@@ -87,6 +87,43 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@500;600;700;800;900&display=swap"
           rel="stylesheet"
         />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'MedicalBusiness',
+              name: 'Asha Jyothi Diagnostic Centre',
+              alternateName: 'Asha Jyothi Diagnostics Toopran',
+              url: 'https://ashajyothidctoopran.com',
+              logo: 'https://ashajyothidctoopran.com/images/logo.png',
+              image: 'https://ashajyothidctoopran.com/images/hero-poster.jpg',
+              description: 'Premier diagnostic center and fully automated pathology lab in Toopran, Medak. 33+ years of clinical excellence (Estd. 1992). 4D Ultrasound, Digital X-Ray, Dental OPG, CT Scan, 2D Echo & 25% discount on health packages.',
+              telephone: '+91-9440009788',
+              priceRange: '₹₹',
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'H.No. 13-21/1/A, Near Busstand, Keshava Nagar Colony',
+                addressLocality: 'Toopran',
+                addressRegion: 'Telangana',
+                postalCode: '502334',
+                addressCountry: 'IN',
+              },
+              geo: {
+                '@type': 'GeoCoordinates',
+                latitude: 17.8496,
+                longitude: 78.4746,
+              },
+              openingHoursSpecification: {
+                '@type': 'OpeningHoursSpecification',
+                dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                opens: '06:00',
+                closes: '21:00',
+              },
+              medicalSpecialty: ['Pathology', 'Radiology', 'Ultrasound', 'Cardiology'],
+            }),
+          }}
+        />
       </head>
       <body className="min-h-full flex flex-col bg-white text-[#12304b]">
         {/* Top Scroll Progress Indicator */}

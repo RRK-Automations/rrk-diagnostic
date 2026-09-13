@@ -17,7 +17,10 @@ import {
   X,
   Loader2,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  Lock,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 
 export default function AdminLayout({
@@ -29,6 +32,51 @@ export default function AdminLayout({
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Change Password Modal state
+  const [passModalOpen, setPassModalOpen] = useState(false);
+  const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+  const [passLoading, setPassLoading] = useState(false);
+  const [passError, setPassError] = useState<string | null>(null);
+  const [passSuccess, setPassSuccess] = useState<string | null>(null);
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPassError(null);
+    setPassSuccess(null);
+
+    if (passForm.newPassword !== passForm.confirmPassword) {
+      setPassError('New password and confirmation password do not match');
+      return;
+    }
+
+    if (passForm.newPassword.length < 6) {
+      setPassError('New password must be at least 6 characters long');
+      return;
+    }
+
+    setPassLoading(true);
+    try {
+      const res = await fetch('/api/auth/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          currentPassword: passForm.currentPassword,
+          newPassword: passForm.newPassword
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to change password');
+
+      setPassSuccess(data.message || 'Password changed successfully!');
+      setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      setTimeout(() => setPassModalOpen(false), 2000);
+    } catch (err: any) {
+      setPassError(err.message);
+    } finally {
+      setPassLoading(false);
+    }
+  };
 
   // If on login screen (/admin), render full-screen clean view
   if (pathname === '/admin') {
@@ -252,6 +300,21 @@ export default function AdminLayout({
 
         {/* Bottom Sidebar Operations */}
         <div className="p-4 border-t border-slate-800/80 flex flex-col gap-2 shrink-0">
+          <button
+            onClick={() => {
+              setPassError(null);
+              setPassSuccess(null);
+              setPassModalOpen(true);
+            }}
+            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold bg-sky-950/40 text-sky-300 hover:bg-sky-900/60 hover:text-white transition border border-sky-800/40"
+          >
+            <div className="flex items-center gap-2">
+              <Lock className="h-3.5 w-3.5 text-sky-400" />
+              <span>Change Password</span>
+            </div>
+            <span className="text-[10px] bg-sky-900/80 px-1.5 py-0.5 rounded text-sky-200 font-medium">Security</span>
+          </button>
+
           <Link
             href="/"
             target="_blank"
@@ -291,7 +354,19 @@ export default function AdminLayout({
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-800">
+            <button
+              onClick={() => {
+                setPassError(null);
+                setPassSuccess(null);
+                setPassModalOpen(true);
+              }}
+              className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3.5 py-1.5 text-xs font-bold text-slate-700 transition"
+            >
+              <Lock className="h-3.5 w-3.5 text-[#0a6cbe]" />
+              <span>Change Password</span>
+            </button>
+
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1.5 text-xs font-bold text-emerald-800">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
               Asha Jyothi Server Online
             </span>
@@ -305,6 +380,100 @@ export default function AdminLayout({
           </div>
         </div>
       </main>
+
+      {/* CHANGE PASSWORD MODAL */}
+      {passModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl relative">
+            <button
+              onClick={() => setPassModalOpen(false)}
+              className="absolute top-5 right-5 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white transition"
+            >
+              <X className="h-4 w-4" />
+            </button>
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-sky-500/10 border border-sky-500/20 text-sky-400 rounded-2xl">
+                <Lock className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-extrabold text-white">Change Password</h3>
+                <p className="text-xs text-slate-400">Update staff authentication secret</p>
+              </div>
+            </div>
+
+            {passError && (
+              <div className="mb-4 p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium flex items-center gap-2">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{passError}</span>
+              </div>
+            )}
+
+            {passSuccess && (
+              <div className="mb-4 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 shrink-0" />
+                <span>{passSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1">Current Password</label>
+                <input
+                  type="password"
+                  required
+                  value={passForm.currentPassword}
+                  onChange={(e) => setPassForm({ ...passForm, currentPassword: e.target.value })}
+                  placeholder="Enter current password"
+                  className="w-full text-xs py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#0a6cbe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1">New Password</label>
+                <input
+                  type="password"
+                  required
+                  value={passForm.newPassword}
+                  onChange={(e) => setPassForm({ ...passForm, newPassword: e.target.value })}
+                  placeholder="At least 6 characters"
+                  className="w-full text-xs py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#0a6cbe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1">Confirm New Password</label>
+                <input
+                  type="password"
+                  required
+                  value={passForm.confirmPassword}
+                  onChange={(e) => setPassForm({ ...passForm, confirmPassword: e.target.value })}
+                  placeholder="Re-enter new password"
+                  className="w-full text-xs py-3 px-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#0a6cbe]"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPassModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={passLoading}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold bg-[#0a6cbe] hover:bg-[#095ca1] text-white shadow transition disabled:opacity-50"
+                >
+                  {passLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Update Password'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

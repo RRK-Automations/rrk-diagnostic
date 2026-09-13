@@ -20,7 +20,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const query = $input.first().json.query || {};\nconst verifyToken = query['hub.verify_token'];\nconst challenge = query['hub.challenge'];\n\n// Check verify token against environment or standard secret (Issue #8)\nif (verifyToken === 'demo_webhook_secret_token') {\n  return { challenge: challenge || 'VERIFIED' };\n}\n\nthrow new Error('Forbidden: Invalid Webhook Verification Token');"
+        "jsCode": "const query = $input.first().json.query || {};\nconst verifyToken = query['hub.verify_token'];\nconst challenge = query['hub.challenge'];\n\n// Check verify token against environment or standard secret (Issue #8)\nif (verifyToken === 'ashajyothitoopran_n8n_secret_2026') {\n  return { challenge: challenge || 'VERIFIED' };\n}\n\nthrow new Error('Forbidden: Invalid Webhook Verification Token');"
       },
       "id": "validate-meta-challenge",
       "name": "Validate Verification Token",

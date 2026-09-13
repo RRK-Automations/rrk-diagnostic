@@ -66,7 +66,7 @@ export const centreInfo: CentreInfo = {
     workingHours: "Open All 7 Days · 7:00 AM to 9:00 PM (24/7 Emergency Support)"
   },
   whatsapp: {
-    number: "917386320634", // Testing number; client: 919440009788 / 919440282688
+    number: "919440009788", // Testing number; client: 919440009788 / 919440282688
     prefilledText: {
       enquiry: "Hello Asha Jyothi Diagnostic Centre, I would like to enquire about diagnostic test packages and scan pricing.",
       appointment: (serviceName: string) => `Hello Asha Jyothi Diagnostic Centre, I would like to book an appointment for ${serviceName}.`,

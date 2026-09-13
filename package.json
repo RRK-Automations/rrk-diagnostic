@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "db:seed": "node src/scripts/seed.js",
+    "db:password": "node src/scripts/change_password.js",
     "n8n:sync": "node src/scripts/sync_n8n_workflows.js"
   },
   "dependencies": {

@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get('hub.verify_token');
   const challenge = searchParams.get('hub.challenge');
 
-  const EXPECTED_VERIFY_TOKEN = process.env.N8N_WEBHOOK_SECRET || 'demo_webhook_secret_token';
+  const EXPECTED_VERIFY_TOKEN = process.env.N8N_WEBHOOK_SECRET || 'ashajyothitoopran_n8n_secret_2026';
 
   if (mode === 'subscribe' && token === EXPECTED_VERIFY_TOKEN) {
     console.log('[WhatsApp Bot] Meta Webhook Verified Successfully with secure token!');

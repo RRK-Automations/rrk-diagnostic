@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
                 required
                 value={form.username}
                 onChange={handleChange}
-                placeholder="e.g. admin"
+                placeholder="Enter staff username"
                 className="w-full text-xs py-3 px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/25"
               />
             </div>
@@ -111,7 +111,7 @@ export default function AdminLoginPage() {
                 required
                 value={form.password}
                 onChange={handleChange}
-                placeholder="Enter password (e.g. admin123)"
+                placeholder="Enter staff password"
                 className="w-full text-xs py-3 px-4 rounded-xl bg-slate-800/80 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-[#0a6cbe] focus:ring-2 focus:ring-[#0a6cbe]/25"
               />
             </div>
@@ -136,13 +136,6 @@ export default function AdminLoginPage() {
               </button>
             </div>
           </form>
-
-          {/* Quick Credential Hint */}
-          <div className="mt-6 pt-4 border-t border-slate-800 text-center">
-            <p className="text-[11px] text-slate-400 font-medium">
-              Demo Access: User <code className="text-sky-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">admin</code> · Pass <code className="text-sky-300 font-bold bg-slate-800 px-1.5 py-0.5 rounded">admin123</code>
-            </p>
-          </div>
 
         </div>
       </div>

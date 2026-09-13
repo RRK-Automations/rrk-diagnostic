@@ -4,7 +4,7 @@ import IntegrationLog from '@/models/IntegrationLog';
 const N8N_APPOINTMENT_WEBHOOK = process.env.N8N_APPOINTMENT_WEBHOOK;
 const N8N_ENQUIRY_WEBHOOK = process.env.N8N_ENQUIRY_WEBHOOK;
 const N8N_REPORT_WEBHOOK = process.env.N8N_REPORT_WEBHOOK;
-const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET || 'demo_webhook_secret_token';
+const N8N_WEBHOOK_SECRET = process.env.N8N_WEBHOOK_SECRET || 'ashajyothitoopran_n8n_secret_2026';
 
 async function logIntegration(
   type: 'appointment' | 'enquiry' | 'status_change' | 'report_ready',
