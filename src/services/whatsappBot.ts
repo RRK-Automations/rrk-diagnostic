@@ -137,7 +137,7 @@ export async function processInboundWhatsAppMessage(
 
     if (lower === '5' || lower.includes('talk') || lower.includes('reception') || lower.includes('call') || lower.includes('human')) {
       return {
-        replyText: `📞 *Contact Asha Jyothi Reception*\n\nOur front desk is available to assist you directly:\n📞 Phone: *+91 73863 20634* / *+91 94400 09788*\n📍 Address: 13-21/1/A, Keshava Nagar Colony, Toopran.\n\n_Our receptionist will also contact you shortly on this number._`
+        replyText: `📞 *Contact Asha Jyothi Reception*\n\nOur front desk is available to assist you directly:\n📞 Phone: *+91 94400 09788* / *+91 93460 09788*\n📍 Address: Behind Surya Medical & General Stores, Main Road, Toopran.\n\n_Our receptionist will also contact you shortly on this number._`
       };
     }
 

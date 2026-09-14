@@ -59,8 +59,8 @@ export const centreInfo: CentreInfo = {
   mapUrl: "https://www.google.com/maps/search/?api=1&query=Asha+Jyothi+Diagnostic+Centre+Toopran+Telangana",
   contact: {
     director: "P. Mallesh Goud",
-    phones: ["+91 94400 09788", "+91 94402 82688"],
-    landlines: ["08454-235537", "08454-235538"],
+    phones: ["+91 94400 09788", "+91 94402 82688", "+91 93460 09788"],
+    landlines: [],
     email: "ashajyothidiagnostic@gmail.com",
     emergency: "24/7 Emergency & Critical Diagnostics",
     workingHours: "Open All 7 Days · 7:00 AM to 9:00 PM (24/7 Emergency Support)"
@@ -79,7 +79,7 @@ export const centreInfo: CentreInfo = {
     "Same-Day Calibrated Digital Test Reports",
     "Doorstep Home Blood & Sample Collection in Toopran",
     "Advanced CT Scan, Color Doppler & 4D Ultrasound",
-    "Digital X-Ray & Digital OPG (Dental Imaging)",
+    "Digital X-Ray",
     "Fully Automated Biochemistry & Hematology Analyzers"
   ],
   consultantSpecialties: [
@@ -161,15 +161,6 @@ export const centreInfo: CentreInfo = {
       preparation: "Remove metal objects",
       turnaroundTime: "15-20 Minutes",
       description: "High-frequency digital radiography for lungs, heart size, and rib cage."
-    },
-    {
-      id: "digital-opg",
-      name: "Digital OPG (Full Mouth Dental X-Ray)",
-      category: "Radiology & Imaging",
-      price: 800,
-      preparation: "Remove earrings & metallic dental clips",
-      turnaroundTime: "15 Minutes",
-      description: "Panoramic digital radiographic scan of upper and lower jaw and teeth."
     },
     {
       id: "ecg",

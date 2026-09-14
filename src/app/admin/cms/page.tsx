@@ -129,21 +129,6 @@ export default function AdminCmsPage() {
     setData({ ...data, phones: updated });
   };
 
-  const handleLandlineChange = (index: number, value: string) => {
-    const updated = [...(data.landlines || [])];
-    updated[index] = value;
-    setData({ ...data, landlines: updated });
-  };
-
-  const handleAddLandline = () => {
-    setData({ ...data, landlines: [...(data.landlines || []), ''] });
-  };
-
-  const handleRemoveLandline = (index: number) => {
-    const updated = data.landlines.filter((_: any, i: number) => i !== index);
-    setData({ ...data, landlines: updated });
-  };
-
   // Package Modifiers
   const handlePackageChange = (index: number, field: string, value: any) => {
     const updated = [...(data.packages || [])];
@@ -656,41 +641,6 @@ export default function AdminCmsPage() {
               </div>
             </div>
 
-            {/* Landlines */}
-            <div className="border-t border-slate-100 pt-5">
-              <div className="flex items-center justify-between mb-3">
-                <label className="text-xs font-bold text-slate-700">Official Landline Numbers</label>
-                <button
-                  type="button"
-                  onClick={handleAddLandline}
-                  className="inline-flex items-center gap-1 text-[11px] font-bold text-[#0a6cbe] hover:underline"
-                >
-                  <Plus className="h-3 w-3" /> Add Landline
-                </button>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {(data.landlines || []).map((landline: string, idx: number) => (
-                  <div key={idx} className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      value={landline}
-                      onChange={(e) => handleLandlineChange(idx, e.target.value)}
-                      placeholder="e.g. 08454-235537"
-                      className="w-full rounded-xl border border-slate-300 px-4 py-2 text-xs text-slate-800 focus:border-[#0a6cbe]"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveLandline(idx)}
-                      className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Operating Timings & WhatsApp */}
             <div className="grid gap-5 sm:grid-cols-3 border-t border-slate-100 pt-5">
               <div>
@@ -1168,7 +1118,7 @@ export default function AdminCmsPage() {
                     <h2 className="text-lg font-black text-slate-900">Diagnostic Infrastructure & Facility Gallery</h2>
                   </div>
                   <p className="text-xs text-slate-500 mt-1">
-                    Upload photos of diagnostic analyzers, 4D ultrasound suites, digital X-Ray, OPG dental, and clinical reception. Displayed live on the <Link href="/about" target="_blank" className="text-[#0a6cbe] font-bold underline">About Page</Link>.
+                    Upload photos of diagnostic analyzers, 4D ultrasound suites, digital X-Ray, and clinical reception. Displayed live on the <Link href="/about" target="_blank" className="text-[#0a6cbe] font-bold underline">About Page</Link>.
                   </p>
                 </div>
 
@@ -1299,7 +1249,7 @@ export default function AdminCmsPage() {
                           >
                             <option value="Pathology Lab">Pathology Lab</option>
                             <option value="4D Ultrasound">4D Ultrasound</option>
-                            <option value="Digital X-Ray & OPG">Digital X-Ray & OPG</option>
+                            <option value="Digital X-Ray">Digital X-Ray</option>
                             <option value="Cardiology">Cardiology</option>
                             <option value="Centre Facility">Centre Facility</option>
                             <option value="CT Scan Suite">CT Scan Suite</option>

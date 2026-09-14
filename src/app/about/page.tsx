@@ -33,7 +33,7 @@ export default function AboutPage() {
     'All',
     'Pathology Lab',
     '4D Ultrasound',
-    'Digital X-Ray & OPG',
+    'Digital X-Ray',
     'Cardiology',
     'Centre Facility'
   ];
@@ -72,8 +72,8 @@ export default function AboutPage() {
     },
     {
       year: '2015',
-      title: 'Digital X-Ray & Digital OPG',
-      description: 'Upgraded to high-frequency low-radiation digital radiography and specialized panoramic dental OPG imaging.'
+      title: 'Digital X-Ray Radiography',
+      description: 'Upgraded to high-frequency low-radiation digital radiography for all anatomical examinations.'
     },
     {
       year: '2020+',
@@ -138,11 +138,10 @@ export default function AboutPage() {
                 {content?.directorDesignation || 'Director'} · {content?.centreName || 'Asha Jyothi Diagnostic Centre, Toopran'}
               </p>
               <p className="mt-6 text-sm leading-relaxed text-slate-200">
-                “Over {content?.yearsOfExcellence || 33} years ago, we began Asha Jyothi with a single commitment: no patient in Toopran should have to travel long distances or wait days for accurate diagnostic answers. Today, with full lab automation, CT scans, digital X-Ray & OPG, and 24/7 emergency readiness, we remain dedicated to every family we serve.”
+                “Over {content?.yearsOfExcellence || 33} years ago, we began Asha Jyothi with a single commitment: no patient in Toopran should have to travel long distances or wait days for accurate diagnostic answers. Today, with full lab automation, CT scans, digital X-Ray, and 24/7 emergency readiness, we remain dedicated to every family we serve.”
               </p>
               <div className="mt-6 pt-4 border-t border-white/20 flex flex-wrap gap-4 text-xs text-sky-100">
-                <span>📞 Cell: {(content?.phones || ['94400 09788', '94402 82688']).join(' / ')}</span>
-                <span>☎️ Landline: {(content?.landlines || ['08454-235537']).join(' / ')}</span>
+                <span>📞 Cell: {(content?.phones?.length ? content.phones : ['94400 09788', '94402 82688', '93460 09788']).join(' / ')}</span>
               </div>
             </div>
           </div>
@@ -155,7 +154,7 @@ export default function AboutPage() {
               {content?.centreName || 'Asha Jyothi Diagnostic Centre'} ({content?.address || 'Behind Surya Medical & General Stores, Main Road, Toopran'}) is Medak district&apos;s premier standalone diagnostic facility.
             </p>
             <p className="mt-3 text-sm leading-relaxed text-slate-600">
-              From automated biochemistry, hematology, and hormonal assays to 4D ultrasound, vascular Doppler, digital OPG dental imaging, and cardiac 2D Echocardiography, our center provides hospital-grade accuracy with the warmth of neighborhood care.
+              From automated biochemistry, hematology, and hormonal assays to 4D ultrasound, vascular Doppler, and cardiac 2D Echocardiography, our center provides hospital-grade accuracy with the warmth of neighborhood care.
             </p>
 
             <div className="mt-6 grid grid-cols-2 gap-4">

@@ -36,7 +36,7 @@ function ReportsContent() {
   const directorName = content?.directorName || 'P. Mallesh Goud';
   const directorDesig = content?.directorDesignation || 'Director';
   const address = content?.address || 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana';
-  const phones = content?.phones || ['94400 09788', '94402 82688'];
+  const phones = content?.phones?.length ? content.phones : ['94400 09788', '94402 82688', '93460 09788'];
   const whatsappNum = content?.whatsappNumber || '919440009788';
 
   const doSearch = async (query: string) => {

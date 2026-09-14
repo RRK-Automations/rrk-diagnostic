@@ -53,7 +53,7 @@ export default function HomePage() {
     'Thyroid Profile (T3, T4, TSH)',
     '4D Ultrasound & Color Doppler',
     'CT Scan & Digital Radiography',
-    'Digital X-Ray & Digital OPG',
+    'Digital X-Ray',
     '2D Echo & 12-Lead ECG',
     'TMT Treadmill Stress Test',
     'HbA1c & Fasting Glucose',
@@ -126,7 +126,7 @@ export default function HomePage() {
 
               {/* Subheading */}
               <p className="mt-5 text-base font-medium leading-relaxed text-slate-200 sm:text-lg max-w-2xl">
-                {content?.heroSubheading || `Under the leadership of Director ${content?.directorName || 'P. Mallesh Goud'}, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.`}
+                {content?.heroSubheading || `Under the leadership of Director ${content?.directorName || 'P. Mallesh Goud'}, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.`}
               </p>
 
               {/* 25% Discount Banner */}

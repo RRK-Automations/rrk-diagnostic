@@ -33,8 +33,7 @@ export default function ContactPage() {
   const directorName = content?.directorName || 'P. Mallesh Goud';
   const directorDesig = content?.directorDesignation || 'Director';
   const address = content?.address || 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana';
-  const phones = content?.phones || ['94400 09788', '94402 82688'];
-  const landlines = content?.landlines || ['08454-235537', '08454-235538'];
+  const phones = content?.phones?.length ? content.phones : ['94400 09788', '94402 82688', '93460 09788'];
   const email = content?.email || 'ashajyothidiagnostic@gmail.com';
   const hours = content?.operatingHours || '7:00 AM – 9:00 PM (All 7 Days)';
   const emergency = content?.emergencySupport || '24/7 Emergency Support';
@@ -148,19 +147,6 @@ export default function ContactPage() {
                           {idx < phones.length - 1 && ' · '}
                         </span>
                       ))}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Landline */}
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-slate-800 rounded-xl text-sky-400 shrink-0">
-                    <Phone className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white text-xs">Official Landlines</h4>
-                    <p className="text-slate-300 mt-0.5 font-semibold">
-                      {landlines.join(', ')}
                     </p>
                   </div>
                 </div>
@@ -344,7 +330,7 @@ export default function ContactPage() {
                         <option value="Health Package Booking (25% OFF)">Health Package Booking (25% OFF)</option>
                         <option value="Doorstep Home Sample Collection">Doorstep Home Sample Collection</option>
                         <option value="4D Ultrasound / Color Doppler Scan">4D Ultrasound / Color Doppler Scan</option>
-                        <option value="Digital X-Ray / Digital OPG">Digital X-Ray / Digital OPG</option>
+                        <option value="Digital X-Ray">Digital X-Ray</option>
                         <option value="Cardiology (2D Echo / ECG / TMT)">Cardiology (2D Echo / ECG / TMT)</option>
                         <option value="Consultant Doctor Appointment">Consultant Doctor Appointment</option>
                       </select>
