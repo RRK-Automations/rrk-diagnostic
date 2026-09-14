@@ -40,11 +40,11 @@ export const defaultDivisions = [
   },
   {
     id: '05',
-    title: 'Cardiology (2D Echo, ECG, TMT)',
+    title: 'Cardiology (2D Echo & ECG)',
     category: 'Cardiology',
     image: '/images/ecg.jpg',
-    description: 'Complete non-invasive cardiac evaluation suite with 12-lead digital ECG, color flow 2D Echocardiography, and computerized Treadmill Stress Test.',
-    tags: ['12-Lead ECG', '2D Echo', 'TMT Stress Test', 'TROP-T Cardiac'],
+    description: 'Complete non-invasive cardiac evaluation suite with 12-lead digital ECG and color flow 2D Echocardiography.',
+    tags: ['12-Lead ECG', '2D Echo', 'TROP-T Cardiac'],
     timing: 'Instant Reporting'
   },
   {

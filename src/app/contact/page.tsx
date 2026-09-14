@@ -331,7 +331,7 @@ export default function ContactPage() {
                         <option value="Doorstep Home Sample Collection">Doorstep Home Sample Collection</option>
                         <option value="4D Ultrasound / Color Doppler Scan">4D Ultrasound / Color Doppler Scan</option>
                         <option value="Digital X-Ray">Digital X-Ray</option>
-                        <option value="Cardiology (2D Echo / ECG / TMT)">Cardiology (2D Echo / ECG / TMT)</option>
+                        <option value="Cardiology (2D Echo / ECG)">Cardiology (2D Echo / ECG)</option>
                         <option value="Consultant Doctor Appointment">Consultant Doctor Appointment</option>
                       </select>
                     </div>

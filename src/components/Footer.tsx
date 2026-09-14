@@ -99,7 +99,7 @@ export default function Footer() {
           </h4>
           <ul className="mt-4 space-y-2 text-xs text-slate-600 font-medium">
             <li className="flex items-center gap-1.5">
-              <span className="text-[#0a6cbe]">🩺</span> Cardiologist (2D Echo / TMT)
+              <span className="text-[#0a6cbe]">🩺</span> Cardiologist (2D Echo & ECG)
             </li>
             <li className="flex items-center gap-1.5">
               <span className="text-[#0a6cbe]">🩺</span> Radiologist & Sonologist (4D USG)

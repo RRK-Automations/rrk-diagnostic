@@ -55,7 +55,7 @@ export default function HomePage() {
     'CT Scan & Digital Radiography',
     'Digital X-Ray',
     '2D Echo & 12-Lead ECG',
-    'TMT Treadmill Stress Test',
+    'Cardiac 2D Echocardiography',
     'HbA1c & Fasting Glucose',
     'Lipid & Cholesterol Profile',
     'Liver (LFT) & Kidney (KFT) Function',
