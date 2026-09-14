@@ -20,8 +20,7 @@ export default function Footer() {
   const years = content?.yearsOfExcellence || 33;
   const estd = content?.establishedYear || 1992;
   const address = content?.address || 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana';
-  const phones = content?.phones || ['94400 09788', '94402 82688'];
-  const landlines = content?.landlines || ['08454-235537', '08454-235538'];
+  const phones = content?.phones?.length ? content.phones : ['94400 09788', '94402 82688', '93460 09788'];
   const email = content?.email || 'ashajyothidiagnostic@gmail.com';
   const hours = content?.operatingHours || '7:00 AM – 9:00 PM (All 7 Days)';
   const emergency = content?.emergencySupport || '24/7 Emergency Support';
@@ -131,9 +130,6 @@ export default function Footer() {
             </p>
             <p>
               📱 <strong>Mobile:</strong> {phones.join(' · ')}
-            </p>
-            <p>
-              ☎️ <strong>Landline:</strong> {landlines.join(' · ')}
             </p>
             <p>
               ✉️ <strong>Email:</strong> {email}

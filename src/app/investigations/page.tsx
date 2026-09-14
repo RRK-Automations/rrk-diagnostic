@@ -202,12 +202,11 @@ export default function InvestigationsPage() {
       id: 'radiology-xray-ct',
       title: 'Digital X-Ray & CT Scan',
       icon: 'ScanLine',
-      subtitle: 'Low-dose digital radiography, full panoramic dental OPG, and cross-sectional Computed Tomography.',
+      subtitle: 'Low-dose digital radiography and cross-sectional Computed Tomography.',
       badge: 'Radiology Wing',
       turnaround: '15 Mins X-Ray / Same-Day CT',
       tests: [
         { name: 'Digital X-Ray', alias: 'Chest PA, Spine, Bones & Joints', badge: 'Popular' },
-        { name: 'Digital OPG', alias: 'Full Panoramic Dental Radiography', badge: 'Popular' },
         { name: 'CT Scan Brain', alias: 'Head CT Plain', badge: 'Popular' },
         { name: 'CT Scan Abdomen', alias: 'Abdominal CT' },
         { name: 'CT PNS', alias: 'Paranasal Sinuses Scan' },
@@ -263,7 +262,7 @@ export default function InvestigationsPage() {
             Diagnostic <span className="grad-text">Investigations & Tests</span>
           </h1>
           <p className="mt-3 text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-            Browse our complete list of blood tests, 4D ultrasound, CT scan, digital X-Ray & OPG, Doppler studies, and ECG/2D Echo.
+            Browse our complete list of blood tests, 4D ultrasound, CT scan, digital X-Ray, Doppler studies, and ECG/2D Echo.
           </p>
 
           {/* Simple Search Input */}

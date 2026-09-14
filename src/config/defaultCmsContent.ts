@@ -31,11 +31,11 @@ export const defaultDivisions = [
   },
   {
     id: '04',
-    title: 'Digital X-Ray & Digital OPG',
+    title: 'Digital X-Ray',
     category: 'Radiology & Imaging',
     image: '/images/xray.jpg',
-    description: 'Low-dose high-frequency digital radiography for chest, bones, and joints, plus full panoramic dental OPG scans with instant digital reads.',
-    tags: ['Chest PA View', 'Bone & Joint', 'Digital OPG Dental', 'Instant Reads'],
+    description: 'Low-dose high-frequency digital radiography for chest, bones, and joints with instant digital reads.',
+    tags: ['Chest PA View', 'Bone & Joint', 'Digital Radiography', 'Instant Reads'],
     timing: '15-20 Minutes'
   },
   {
@@ -152,10 +152,10 @@ export const defaultGalleryImages = [
   },
   {
     id: 'gal-3',
-    title: 'Digital Radiography & Panoramic OPG',
-    category: 'Digital X-Ray & OPG',
+    title: 'Digital Radiography Suite',
+    category: 'Digital X-Ray',
     image: '/images/digital-xray-suite.jpg',
-    description: 'Low-radiation high-frequency digital X-Ray unit and specialized full-mouth panoramic dental OPG imaging system.',
+    description: 'Low-radiation high-frequency digital X-Ray unit for bones, joints, spine, and chest imaging.',
     featured: true
   },
   {
@@ -209,8 +209,8 @@ export function getDefaultSiteContent() {
     yearsOfExcellence: centreInfo.yearsOfExcellence,
     establishedYear: centreInfo.establishedYear,
     address: centreInfo.address,
-    phones: centreInfo.contact?.phones || ['94400 09788', '94402 82688'],
-    landlines: centreInfo.contact?.landlines || ['08454-235537', '08454-235538'],
+    phones: centreInfo.contact?.phones || ['94400 09788', '94402 82688', '93460 09788'],
+    landlines: [],
     email: centreInfo.contact?.email || 'ashajyothidiagnostic@gmail.com',
     operatingHours: centreInfo.contact?.workingHours || '7:00 AM – 9:00 PM (All 7 Days)',
     emergencySupport: '24/7 Emergency Support',
@@ -218,7 +218,7 @@ export function getDefaultSiteContent() {
     whatsappPrefilledMessage: centreInfo.whatsapp?.prefilledText?.enquiry || 'Hi Asha Jyothi Diagnostics, I would like to book a diagnostic test / home visit.',
 
     heroHeadline: 'Precision Diagnostics. Compassionate Care.',
-    heroSubheading: `Under the leadership of Director ${centreInfo.director}, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.`,
+    heroSubheading: `Under the leadership of Director ${centreInfo.director}, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.`,
     discountBannerText: 'Special Promotion: Flat 25% Discount on all 10 Official Health Checkup Packages!',
     discountPercentage: 25,
     heroVideoUrl: '/videos/hero.mp4',

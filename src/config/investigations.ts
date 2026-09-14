@@ -905,7 +905,7 @@ export const diagnosticInvestigations: InvestigationCategory[] = [
     title: 'Digital X-Ray & Computed Tomography (CT Scan)',
     icon: 'ScanLine',
     type: 'Radiology & Imaging',
-    description: 'Low-radiation digital radiography, full panoramic dental OPG, and cross-sectional Computed Tomography (CT) scans.',
+    description: 'Low-radiation digital radiography and cross-sectional Computed Tomography (CT) scans.',
     items: [
       {
         id: 'xray-1',
@@ -918,19 +918,6 @@ export const diagnosticInvestigations: InvestigationCategory[] = [
         fastingOrPrep: 'Remove jewelry, metallic items and belts',
         turnaroundTime: '15-20 Minutes (Immediate Film/Digital)',
         description: 'Low-dose high-definition radiography for Chest (PA/AP view), Spine (Cervical, Lumbar, Dorsal), Bones, Joint fractures, and Abdomen.',
-        popular: true
-      },
-      {
-        id: 'xray-2',
-        name: 'Digital OPG (Orthopantomogram)',
-        alias: 'Full-Mouth Panoramic Dental X-Ray',
-        department: 'Digital Radiography',
-        subCategory: 'X-Ray',
-        type: 'Radiology',
-        sampleOrModality: 'Panoramic Digital Sensor',
-        fastingOrPrep: 'Remove earrings, necklaces and dental dentures',
-        turnaroundTime: '15 Minutes',
-        description: 'Full panoramic dental radiography capturing upper and lower jaws, teeth roots, wisdom tooth impactions, and TM joints in a single sweep.',
         popular: true
       },
       {

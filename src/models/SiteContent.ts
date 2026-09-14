@@ -99,8 +99,8 @@ const SiteContentSchema = new Schema<ISiteContent>(
       required: true, 
       default: 'Behind Surya Medical & General Stores, Main Road, TOOPRAN - 502 334, Medak District, Telangana' 
     },
-    phones: { type: [String], default: ['94400 09788', '94402 82688'] },
-    landlines: { type: [String], default: ['08454-235537', '08454-235538'] },
+    phones: { type: [String], default: ['94400 09788', '94402 82688', '93460 09788'] },
+    landlines: { type: [String], default: [] },
     email: { type: String, default: 'ashajyothidiagnostic@gmail.com' },
     operatingHours: { type: String, default: '7:00 AM – 9:00 PM (All 7 Days)' },
     emergencySupport: { type: String, default: '24/7 Emergency Support' },
@@ -113,7 +113,7 @@ const SiteContentSchema = new Schema<ISiteContent>(
     heroHeadline: { type: String, default: 'Precision Diagnostics. Compassionate Care.' },
     heroSubheading: { 
       type: String, 
-      default: 'Under the leadership of Director P. Mallesh Goud, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray & OPG, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.' 
+      default: 'Under the leadership of Director P. Mallesh Goud, Asha Jyothi brings comprehensive pathology, 4D ultrasound, CT scan, digital X-Ray, and 2D Echo under one roof in Toopran with same-day reports and 24/7 emergency support.' 
     },
     discountBannerText: { 
       type: String, 

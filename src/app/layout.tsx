@@ -11,7 +11,15 @@ export const metadata: Metadata = {
     default: 'Asha Jyothi Diagnostics — Precision Diagnostics, Compassionate Care · 33+ Years of Excellence',
     template: '%s | Asha Jyothi Diagnostic Centre, Toopran'
   },
-  description: 'Asha Jyothi Diagnostic Centre in Toopran, Medak. 33+ years of clinical diagnostic trust (Estd. 1992). Director P. Mallesh Goud. Fully automated pathology laboratory, 4D ultrasound, CT scan, digital X-Ray & OPG, cardiac 2D Echo, 25% discount on health checkup packages and same-day reports.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/images/logo.png' }
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/images/logo.png',
+  },
+  description: 'Asha Jyothi Diagnostic Centre in Toopran, Medak. 33+ years of clinical diagnostic trust (Estd. 1992). Director P. Mallesh Goud. Fully automated pathology laboratory, 4D ultrasound, CT scan, digital X-Ray, cardiac 2D Echo, 25% discount on health checkup packages and same-day reports.',
   keywords: [
     'Asha Jyothi Diagnostics',
     'Asha Jyothi Diagnostic Centre Toopran',
@@ -21,7 +29,6 @@ export const metadata: Metadata = {
     '4D ultrasound Toopran',
     'CT scan Medak',
     'digital X-ray Toopran',
-    'dental OPG Toopran',
     '2D Echo Cardiology Toopran',
     'P. Mallesh Goud',
     'health checkup packages Toopran',
@@ -40,7 +47,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Asha Jyothi Diagnostics — Premier Diagnostic Centre in Toopran',
-    description: '33+ years of clinical precision in Toopran, Medak. Automated laboratory, 4D ultrasound, CT scan, digital X-Ray & OPG, 2D Echo, and flat 25% off health checkups.',
+    description: '33+ years of clinical precision in Toopran, Medak. Automated laboratory, 4D ultrasound, CT scan, digital X-Ray, 2D Echo, and flat 25% off health checkups.',
     url: 'https://ashajyothidctoopran.com',
     siteName: 'Asha Jyothi Diagnostic Centre',
     images: [
@@ -81,6 +88,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full antialiased scroll-smooth">
       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" href="/images/logo.png" />
+        <link rel="apple-touch-icon" href="/images/logo.png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
@@ -98,7 +108,7 @@ export default function RootLayout({
               url: 'https://ashajyothidctoopran.com',
               logo: 'https://ashajyothidctoopran.com/images/logo.png',
               image: 'https://ashajyothidctoopran.com/images/hero-poster.jpg',
-              description: 'Premier diagnostic center and fully automated pathology lab in Toopran, Medak. 33+ years of clinical excellence (Estd. 1992). 4D Ultrasound, Digital X-Ray, Dental OPG, CT Scan, 2D Echo & 25% discount on health packages.',
+              description: 'Premier diagnostic center and fully automated pathology lab in Toopran, Medak. 33+ years of clinical excellence (Estd. 1992). 4D Ultrasound, Digital X-Ray, CT Scan, 2D Echo & 25% discount on health packages.',
               telephone: '+91-9440009788',
               priceRange: '₹₹',
               address: {

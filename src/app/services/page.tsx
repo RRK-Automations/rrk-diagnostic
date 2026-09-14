@@ -23,7 +23,7 @@ export default function ServicesPage() {
               Comprehensive <span className="grad-text">Diagnostic Services</span>
             </h1>
             <p className="mt-4 text-base text-slate-600 sm:text-lg">
-              Eight specialized diagnostic divisions under one roof in Toopran — from advanced pathology and 4D ultrasound to digital X-ray, digital OPG, and cardiology.
+              Eight specialized diagnostic divisions under one roof in Toopran — from advanced pathology and 4D ultrasound to digital X-ray and cardiology.
             </p>
           </div>
         </div>
